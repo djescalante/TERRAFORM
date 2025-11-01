@@ -51,3 +51,8 @@ resource "aws_instance" "nginx_server" {
                 EOF
   }
 
+resource "aws_key_pair" "nginx_server_ssh_key" {
+  key_name   = "nginx_server.key"
+  public_key = file("./keys/nginx_server.pub")
+  
+}
