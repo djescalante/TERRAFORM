@@ -1,0 +1,33 @@
+# Terraform dirs
+.terraform/
+
+# State
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+
+# Variables and overrides (local)
+*.tfvars
+*.tfvars.json
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Plan files
+*.plan
+*.tfplan
+
+# CLI config (local)
+.terraformrc
+terraform.rc
+
+# Keys and sensitive material
+*.pem
+*.key
+
+# OS junk
+.DS_Store
+Thumbs.db
+
