@@ -1,6 +1,14 @@
 # Local .terraform directories
 .terraform/
 
+#keys ssh
+./keys/*.pem
+./keys/*.ppk
+./keys/*.pub
+
+
+
+
 # .tfstate files
 *.tfstate
 *.tfstate.*.backup

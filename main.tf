@@ -43,15 +43,11 @@ resource "aws_instance" "nginx_server" {
 
   # 'user_data' es un script que se ejecuta automáticamente la primera vez que la instancia arranca.
   # Es ideal para instalar software o realizar configuraciones iniciales.
-  user_data = <<-EOF
-              #!/bin/bash
-              # Actualiza todos los paquetes del sistema
-              yum update -y
-              # Instala el paquete de Nginx desde los repositorios extra de Amazon Linux
-              amazon-linux-extras install nginx1 -y
-              # Inicia el servicio de Nginx
-              systemctl start nginx
-              # Habilita el servicio de Nginx para que se inicie automáticamente en cada reinicio
-              systemctl enable nginx
-              EOF
-}
+  user_data = <<EOF
+                #!/bin/bash -xe
+                yum update -y
+                amazon-linux-extras install -y nginx1
+                systemctl enable --now nginx
+                EOF
+  }
+
