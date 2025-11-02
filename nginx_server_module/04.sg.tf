@@ -1,6 +1,6 @@
 #Seguridad para la instancia EC2
 resource "aws_security_group" "nginx_sg" {
-  name        = "nginx_sg"
+  name        = "${var.server_name}-${var.environment}-sg"
   description = "Allow HTTP and SSH traffic"
 
   ingress  {

@@ -1,0 +1,982 @@
+# tactiq.io free youtube transcript
+# No title found
+# https://www.youtube.com/watch/_84CxYRv9Ik
+
+00:00:00.000 No text
+00:00:00.599 terraform Qué es terraform bueno terraform Es una
+00:00:05.839 herramienta para automatizar la creación gestión y configuración de infraestructura de manera
+00:00:12.759 declarativa quiero empezar con esta definición a decir la charla que buena
+00:00:18.000 palabra y empecemos por el final por la dos palabras que son manera declarativa
+00:00:24.599 esto significa que terraform va a estar funcionando con archivos con código
+00:00:30.840 esto significa que ese código puede estar versionado y justamente como Andrés en el chat preguntó si hay repo
+00:00:38.600 significa que tu infraestructura va a empezar a formar parte de un repositorio
+00:00:44.120 no va a estar simplemente en la cabeza de los ingenieros de infraestructura
+00:00:50.280 quizás de los xadmin o de los sre o de los deops sino que ya va a formar parte de un archivo donde ese archivo ya se
+00:00:57.000 puede versionar y se puede guardar en un repositorio externo como es git Perdón
+00:01:02.519 github o gitlab o bitbet o el que quieran usar ustedes bien Ahora vamos con la
+00:01:09.520 definición con la primera parte si es una herramienta para automatizar la creación gestión y configuración todo lo
+00:01:16.400 que es automatizar sabemos que a nosotros como devops o quizás ustedes son desarrolladores y quieren empezar
+00:01:22.960 también con este mundo de deops es crucial tener todo automatizado poder
+00:01:28.840 tener entas que nos ayuden en el día a día con la creación justamente gestión y
+00:01:34.840 configuración de la infraestructura es algo super valioso y terraform viene a solucionar noos esto fíjense que decimos
+00:01:43.280 creación gestión y configuración no es solamente para crear tu infraestructura
+00:01:49.520 sino también te sirve para gestionarla Como por ejemplo
+00:01:54.840 durante el ciclo de vida que tiene tu infraestructura va sufriendo cambios s
+00:02:00.000 quizás tenés que escalar el servidor quizás tenés que crear uno nuevo quizás tenés que deprecar porque ya la
+00:02:08.000 tecnología con la cual estás corriendo ese servidor ya no se usa en tu empresa quizás cambiaste el lenguaje y ya ese
+00:02:14.040 servidor no sirve bueno todas esas cosas las podés hacer con terraform y obviamente configurarlas sí no solamente
+00:02:21.080 te permite crear un servidor sino que también te permite configurarlo ya sea instalando paquetes descargando
+00:02:27.720 dependencias eh configurando quizás una conexión entre redes una conexión a una
+00:02:33.480 base de datos etcétera etcétera etcétera todo eso va a estar dentro de terraform
+00:02:39.239 sí Así que si vemos abajo el grafiques todo lo que dije recién sobre
+00:02:45.159 terraform vamos a ver que tenemos a una persona que ejecuta obviamente infraestructura como código que no lo
+00:02:51.080 dije hasta ahora terrafor aplica el principio de infraestructura como código que es literalmente eso es tener código
+00:02:58.959 que representa o crea infraestructura es literalmente ese concepto después
+00:03:05.040 tenemos dos palabras clave que vamos a estar viendo mucho durante todo este webinar que es plan y apply el plan
+00:03:13.319 literalmente es la planificación de lo que V a estar creando el apply por
+00:03:18.440 supuesto es aplicar esa infraestructura y fíjense algo muy copado es que
+00:03:23.799 terraform funciona con muchos proveedores sí no solamente awc no
+00:03:30.120 solamente cuber rentes sino tenés un montón más acá abajo bien tanto Google
+00:03:35.599 Cloud como aure entre otros eso también es algo muy bueno hay nubes que tienen
+00:03:40.640 su propio su propia herramienta de infraestructura como código Como por ejemplo aws que tiene Cloud formation
+00:03:47.519 Pero yo siempre que recomiendo recomiendo usar terraform por esto por la facilidad que te da cambiar de nube
+00:03:53.879 ojo un disclaimer no significa que el mismo código exactamente el mismo
+00:04:00.280 funcione para awc y para aur ya vamos a empezar a entender Por qué no funciona
+00:04:06.159 Exactamente igual pero si vos ya estás entendiendo Cómo funciona la herramienta Cómo funciona el lenguaje Qué palabras
+00:04:13.120 clave tenés que usar y a veces es más fácil adaptar el mismo código de un proveedor a otro que aprender una
+00:04:19.199 herramienta totalmente nueva y desde cero bien Por eso les digo que vayan por
+00:04:24.840 terraform ya de una de una absolutamente de una vamos a pasar a una de en vivo
+00:04:25.000 No text
+00:04:30.280 vamos a estar mostrando cómo funciona terraform Porque es muy lindo en la teoría pero vamos a verlo en la
+00:04:37.680 práctica para esto pensé un escenario que el escenario consta de lo siguiente
+00:04:44.039 una empresa te contrata para levantar un sitio web en su cuenta de aws ellos
+00:04:49.440 quieren levantar el servidor en una instancia de s2 te piden que instales un
+00:04:54.639 servidor web enginex que luego ellos van a configurar Así que te piden abrir el
+00:04:59.919 puerto 80 y 22 a todo el mundo bien Este es un escenario bastante simple como lo
+00:05:06.120 pueden ver tenemos un proveedor en este caso va a ser aws tenemos una instancia
+00:05:11.919 de s2 tenemos un Security Group que es eh Para abrir el puerto 80 y el 22 Y
+00:05:17.960 tenemos una aplicación que instalar que es eh enginex además de esto hay un secretito
+00:05:24.199 acá que es literalmente la llave ssh para poder conectarnos a el servidor sí
+00:05:29.880 es un ejemplo bastante básico sencillo pero creo que nos va a cubrir con
+00:05:35.080 nuestro nuestro webinar va a cumplir con todas las expectativas bien lo primero que tenemos
+00:05:39.000 No text
+00:05:41.120 que hacer es Descargar terraform Cómo descargamos terraform bueno de muchas
+00:05:46.400 maneras en la página oficial obviamente que la pueden ir y descargar es totalmente gratuito eso no lo dije antes
+00:05:51.639 pero se da por entendido quizás no en realidad mala mía pero terraform es
+00:05:57.080 gratis lo pueden descargar en mi caso estoy usando usando Windows Así que estoy usando el gestor de paquetes
+00:06:02.280 winget y simplemente corremos winget install install si nos ponemos técnico
+00:06:08.120 perfecto inglés hore terrafor Sí con Mac usan brew y lo instalan y con Linux
+00:06:15.440 tienen que descargar el binario y ponerlo bueno en su pad para que funcione Una vez que se instaló
+00:06:21.199 simplemente podemos probar terrafor menos menos version y nos tiene que devolver la versión y con esto ya sabemos que terraform quedó instalado en
+00:06:28.440 nuestra máquina y ya lo podemos utilizar herramientas Qué herramientas
+00:06:32.000 No text
+00:06:35.120 vamos a estar utilizando bueno aws cli para interactuar con aws esta cli no es
+00:06:41.319 necesaria eh que ustedes la sepan usar porque literalmente vamos a estar creando todo con terraform pero sí
+00:06:46.800 necesitamos configurarla para poder conectarnos desde nuestra máquina aws Sí
+00:06:52.479 ustedes las descargan también de nuevo Tiene un montón de de opciones es multisistema operativo y Simplemente hay
+00:06:58.440 que poner aws configure y ponerle las credenciales el Secret token el Secret
+00:07:04.520 ID o la Ke ID no me acuerdo ahora el nombre la región y el output y ya está y
+00:07:09.759 repositorio bueno en este caso Yo tengo un repo que está actualmente vacío solamente tiene un redmi y el git ignore
+00:07:17.400 nada más que está acá en esta URL si github.com barc binario bar webinar
+00:07:22.720 terraform pueden ir y descargarse el código y cada comit que yo haga ahora en vivo ustedes ya lo van a poder ver eh
+00:07:30.560 Como quieran pueden ir y directamente usar ese repositorio o pueden crearse uno ustedes y ya está Sí este webinar va
+00:07:37.440 a quedar absolutamente grabado Así que lo van a poder ver Todo bien por las dudas Lo aclaro eso y opcional la
+00:07:44.840 extensión de visual Studio code de terraform Por qué es opcional bueno
+00:07:50.319 porque Obviamente que no es necesario usar ninguna extensión para que funcione la herramienta porque es simplemente una
+00:07:56.000 cli pero está buena la extensión porque eh Te pinta de colores con palabras
+00:08:01.199 claves y podés ir linkando cositas entonces Está bueno tener la extensión si te facilita un poquito la vida
+00:08:07.800 básicamente tener esa extensión de visual Studio Hola mundo en terrafor
+00:08:11.000 No text
+00:08:13.440 vamos a crear nuestro primer proyecto en terraform siguiendo el escenario que vimos
+00:08:19.879 anteriormente main.tf nuestro primer archivo de
+00:08:26.199 terraform este archivo eh No es necesario que se llame Main como vemos en el tercer renglón pero s es una buena
+00:08:33.559 práctica eso por las dudas abajo está el comando que hay que ejecutar y una aclaración Que me anot acá para no
+00:08:39.399 olvidarme terraform Lee automáticamente todos los archivos con extensión pun tf
+00:08:46.399 del directorio eso ténganlo presente no para ahora sino para después yo sé lo
+00:08:53.360 que les digo sí Entonces vamos a estar creando nuestro primer archivo que va a ser el Main tf Y qué le vamos a estar
+00:09:00.839 poniendo adentro Bueno vamos aprender nuestro primer componente el Provider un
+00:09:06.880 proveedor en terraform es un plugin que interactúa con un servicio o Api específica de un proveedor de
+00:09:12.640 infraestructura en nuestro caso como Ya vimos el ejemplo el escenario vamos a estar conectándonos con awc para hacer
+00:09:19.959 eso es muy fácil simplemente que escribir esta sentencia Provider aws y
+00:09:25.440 En qué región vamos a estar trabajando podemos puedes agregar más cosas Sí
+00:09:31.160 vamos a poder agregar más cosas pero por ahora vamos a estar usando solamente lo más básico para que esto no sea muy
+00:09:38.560 problemático y lo puedan entender relativamente fácil bien con esto ya lo
+00:09:44.040 tenemos ahora vamos a seguir con otra eh parte del archivo que va a ser el
+00:09:51.480 recurso los recursos o los resource son la unidad básica de configuración en
+00:09:57.240 terraf Sí o sea que la mínima expresión que podemos utilizar en terraform se
+00:10:03.240 llama resource fíjense que tiene una estructura esto si no son palabras al
+00:10:09.079 azar no son con colores lindo nada más sino que tenemos recurso Qué tipo de recurso en este caso va a ser una aws
+00:10:16.360 instance y cómo lo vamos a estar llamando bueno en este caso va a ser enginex server bien Esto de aws instance
+00:10:25.040 es muy importante porque te Define Qué tipo de recurso vamos a estar creando nosotros podemos crear un montón de
+00:10:30.920 tipos Ya lo vamos a estar viendo pero por ahora lo vamos a quedar con la instancia que es lo que queríamos crear no el escenario te pedía que creemos una
+00:10:37.839 instancia de s2 acá nos pregunta qué ami vamos a estar poniéndole le asignamos
+00:10:43.360 esta que es una de Amazon Linux y el tipo de instancia en este caso va a ser una t3 micro que no me acuerdo Ahora si
+00:10:50.360 la t3 micro era medio giga de ram y medio núcleo o un núcleo y medio gig de ram pero es una instancia muy chiquita
+00:10:57.160 como se podrán imaginar bueno código en visual Studio code Vamos
+00:11:03.480 a ponernos manos a la obra y vamos a estar poniendo el código que acabamos de aprender en nuestro primer proyecto cada
+00:11:10.959 vez que vean este iconito de acá en adelante esta computador en la presentación significa que vamos a tener
+00:11:16.200 que ir a visual Studio y ejecutar código por las dudas se lo voy diciendo desde ahora Así que vamos a ir a visual Studio
+00:11:22.880 code que ya lo tengo acá preparad e lo pueden ver un poquito más grande yo
+00:11:28.480 traté de que lo vean Porque a veces hay un poco de problemas con Eh mi pantalla
+00:11:34.480 como estoy Stream a 2k Quizás lo pueden ver muy chico y por eso me Tomé el atrevimiento de agrandarlo bien estoy en
+00:11:41.760 el repositorio webinar terraform y vamos a estar creando nuestro primer archivo que eh le vamos a estar poniendo las dos
+00:11:48.880 cosas que acabamos de aprender recién Sí yo tengo a la derecha como una especie
+00:11:54.040 de receta como todo cocinero y me guardo las cosas y voy copiando y pegando Para
+00:11:59.920 no perder tanto tiempo bueno el archivo le voy a llamar como habíamos aprendido
+00:12:05.920 main.tf eh acá algo muy importante Andrés Pregunta Qué es ami y tiene razón
+00:12:11.040 bueno la ami es la Amazon image qué imagen de Amazon es la que vamos a estar
+00:12:16.639 levantando sí en este caso va a ser justamente una ami con un ID que no hace
+00:12:22.399 falta que lo aprendamos esto se ve directamente desde aws y ya con esto podemos empezar a trabajar sí
+00:12:29.440 Ahora hasta acá tenemos el código y vemos que está que es exactamente lo que aprendimos de la presentación bien vamos
+00:12:36.800 a volver ahora a la presentación y tenemos que aprender algo bien unos
+00:12:45.000 No text
+00:12:45.000 comandos tenemos que aprender los comandos para interactuar con terraform Por qué Porque como dijimos terraform es
+00:12:51.480 un binario que funciona por consola y nosotros necesitamos comunicarnos con ese binario que es terraform así que qué
+00:12:59.360 comandos tiene terraform para poder interactuar con él bueno los principales que vamos a estar aprendiendo hoy Y
+00:13:05.720 utilizando van a ser los siguientes si terraform init es para inicializar el
+00:13:12.199 directorio de trabajo terraform plan que es para generar un plan de ejecución
+00:13:17.480 terraform apply que es para aplicar los cambios y terraform destroy que es para
+00:13:23.279 eliminar los recursos con estos comandos básicos vamos a poder estar creando la
+00:13:30.079 infraestructura que estamos definiendo en terraform además obviamente destruyéndola en caso de que nosotros
+00:13:36.959 solamente queremos ver Qué cambios debería pasar en la infraestructura con lo que no sé imagínense que guardamos el
+00:13:43.560 archivo y modificamos un valor y queremos ver qué pasa con el plan simplemente vamos a estar viendo qué va
+00:13:50.240 a ser terraform Sí con el apply lo va aplicar Obviamente con el destroy lo va a destruir y el init es necesario porque
+00:13:56.519 el init descarga todos los plugins que necesita para poder interactuar
+00:14:01.800 justamente con la infraestructura definida entonces voy a estar bajando un poquito acá y vamos a estar poniendo ya
+00:14:08.040 tenemos el código que vamos a estar desplegando lo tenemos acá a la izquierda y vamos a poner terraform init
+00:14:14.320 y vamos a ver qué pasa fíjense que lo que está haciendo
+00:14:20.560 esto no no lo estoy mostrando pero vamos a venir acá a la izquierda y si abrimos la carpeta vamos a estar viendo que se
+00:14:26.839 creó una una carpeta punto terraform y en esta carpeta pun terraform se descargó un ejecutable este ejecutable
+00:14:34.600 es literalmente el plugin de awc que tiene terraform para poder interactuar
+00:14:40.240 con la consola de awc bien entonces ya tenemos nuestro
+00:14:49.000 proveedor o nuestro plugin descargado en la máquina y ahora vamos a estar viendo
+00:14:54.560 qué es lo que va a hacer terraform así que vamos a poner terraform plan y esperamos unos
+00:15:04.560 minutos listo es bastante rápido plan veos acá el resumen plan uno a agregar
+00:15:12.040 cero a cambiar y cero a destruir es exactamente lo que queremos hacer qué va
+00:15:17.399 a estar haciendo bueno simplemente va a estar creando nuestra máquina de s2 sí
+00:15:23.120 que por si no saben una instancia de s2 es como una máquina virtual es literal
+00:15:28.839 ente Eso sí acá fíjense que los valores que solamente definió son los dos que le
+00:15:35.480 acabamos de aclarar nosotros la ami que es este ID gigante que no hace falta que
+00:15:40.680 lo aprendan y el tipo de instancia después todos lo demás dice lo voy a
+00:15:45.759 saber una vez que lo aplique porque la verdad que ahora no tengo idea Cuál va a ser por ejemplo el ID de esta instancia
+00:15:52.839 de s2 no la conozco la voy a saber una vez que lo aplico Así que vamos a aplicar esto voy a estar estar
+00:15:59.720 eh limpiando la consola y vamos a poner terraform apply como ya aprendimos para
+00:16:05.720 aplicar este infraestructura que al principio puede ser básica pero recuerden que estamos Aprendiendo a usar
+00:16:12.120 terraform muchachos estamos creando infraestructura a partir de código me parece una
+00:16:17.880 locura Entonces te da de nuevo el plan fíjense que te dice Bueno Mirá revisalo
+00:16:23.399 bien porque esto Una vez que lo aplique no hay cambios ya se puede volver atrás obvio con el destroy pero revis bien
+00:16:29.880 todo lo que vas a estar haciendo listo hay que poner abajo Yes si lo queremos aplicar o cualquier otra cosa si no lo
+00:16:37.040 queremos aplicar en estro caso lo queremos aplicar Así que vamos a poner Yes y esperamos a que se
+00:16:43.519 cree Felicidades ya saben usar terraform Y vos me estás preguntando ahora Che
+00:16:49.920 Ariel y cómo veo Esto bueno vamos a verlo directamente en aws para eso vamos
+00:16:56.079 a ir a eh la consola de de aws Yo ya me lo guié en mi consola de aws antes ya
+00:17:02.720 configuré Obviamente el visal Studio code para que pueda interactuar con aws y acá estoy en la parte de
+00:17:10.160 instancias ahora Obviamente que no hay ninguna si recargamos esto vamos a ver
+00:17:15.480 que de repente apareció una aparece Nuestra primer instancia que fue la que acabamos de crear y vemos que lo único
+00:17:22.599 que le habíamos pedido es que sea t3 micro que lo cumple y le habíamos pedido
+00:17:28.480 una ami Qué bueno la ami la tenemos por algún lado perdida de toda esta info está acá abajo es esta ami si
+00:17:35.120 exactamente esta y ya la pueden ver acá s No se preocupen no no desconfíen la
+00:17:40.679 tienen ahí y ahora lo que tenemos que hacer es comite este código porque ya funciona Obviamente que se está
+00:17:46.919 inicializando así que Esperemos no hay ningún problema vamos a ir a visual Studio code y voy a estar haciendo esto
+00:17:55.120 tu Ahí está para Que aparezca lo que habamos se parado y voy a estar creando
+00:18:00.919 nuestro primer comit Así que vamos a poner Hola mundo en terraform bien Voy a
+00:18:07.679 comite el main.tf muy importante y ya lo tienen
+00:18:12.840 subido ya está comite nuestro primer eh comit nuestra instancia básica de aws ya
+00:18:21.440 está comite y ya la pueden utilizar a su gusto Entonces ya tenemos la
+00:18:27.600 infraestructura aplicada como vimos recién en el ejemplo pero no sé si a
+00:18:32.960 ustedes les pasó pero a mí me dio como una sensación de sabor a poco Qué
+00:18:38.360 significa esto Bueno sí creamos una instancia s2 creamos una máquina virtual
+00:18:43.400 nos conectamos a WS pamos nuestro primer código pero es como y ya está Eso es
+00:18:49.240 todo lo que tiene terraform bueno Por supuesto que no vamos a estar terminando con los requisitos que eh nuestro
+00:18:57.480 cliente nos pidió Entonces qué Vamos a estar haciendo bueno vamos a estar
+00:18:59.000 No text
+00:19:03.600 agregando estas modificaciones dentro del código Sí qué teníamos que hacer si
+00:19:09.159 recuerdan hay que instalar enginex que si por si no conocen enginex es un servidor web para justamente poner la
+00:19:16.520 aplicación o la página web de este cliente después tenemos una clave ssh
+00:19:21.559 para que ellos puedan entrar por s y obviamente yo también para que después se pueda configurar el servidor de
+00:19:27.360 enginex con la página que ellos quieren eso Si recuerdan el escenario lo van a hacer ellos solamente nosotros
+00:19:33.679 necesitamos levantar el engine x y nada más después necesitamos instalar el Security Group que si no conocen lo que
+00:19:40.480 es un Security Group en aws es el firewall de la máquina digamos no con esto nosotros podemos abrir y cerrar
+00:19:47.440 puertos en este caso necesitamos abrir dos el 80 y el 22 bien Y por último una
+00:19:54.440 muy buena práctica de aws que yo les voy a pedir que me sigan y lo hagan es
+00:20:02.200 agregar tags los tags son simplemente etiquetas que se le agregan a todos los
+00:20:07.880 recursos que vos creas en aws o en cualquier nube para justamente identificarlos y tener seguimiento a
+00:20:15.200 nivel de costos a nivel de equipo a nivel de ambiente etcétera etcétera etcétera puedes poner todos los tags que
+00:20:21.039 vos quieras Así que una vez definido todas estas modificaciones que le tenemos que hacer al código vamos a
+00:20:27.440 aplicarlas justamente vamos a regresar a nuestro eh
+00:20:33.960 visual Studio Sí y lo que voy a estar haciendo es destruyendo primeramente la
+00:20:39.000 infraestructura Sí cómo hacemos esto con terraform destroy si recuerdan le voy a
+00:20:44.360 estar le voy a estar dando un poquito de enters para Que aparezca bien en la pantalla si recuerdan Terra for destroy
+00:20:49.559 destruía toda nuestra infraestructura Así que vamos a estar destruyéndola qué va a estar pasando bueno se va a
+00:20:55.960 conectar con aws va a ver qué es lo que va a estar haciendo y te va a decir mira voy a estar destruyendo esto a vos te
+00:21:03.320 parece de nuevo al igual que la Play hay que confirmar y hay que ponerle que sí
+00:21:08.400 así que esperamos y que se aplique la el destroy vamos a estar aplicando las
+00:21:14.480 modificaciones al código correspondiente qué vamos a estar haciendo bueno lo primero que dijimos es instalar enginex
+00:21:21.320 cómo instalamos enginex bueno existe en aws si algo que se llama user Data o
+00:21:29.320 user Data que es un Script que ejecuta aws cuando se inicializa la máquina o
+00:21:37.159 sea la máquina virtual Así que simplemente voy a venir le voy a habilitar esa opción user Data igual y
+00:21:43.440 todo el Script que instala enginex fíjense que es muy simple es un Script
+00:21:48.720 de bash donde instalo enginex habilito el servicio de enginex e inicio el
+00:21:54.960 servicio nada más con esto ya cumplimos la primera eh modificación que era
+00:22:02.600 instalar enginex ya está ahora vamos a seguir con la segunda que es la clave
+00:22:08.440 csh este es uno de los pasos más eh difíciles Por así decirlo que
+00:22:15.240 necesitamos que estén atentos Por qué Porque la clave csh No solamente la
+00:22:21.200 vamos a estar utilizando sino que la vamos a estar creando desde cero en nuestra máquina local y la vamos a estar
+00:22:27.520 sub a Eh aws Así que lo que vamos a estar haciendo es crear eh nuestro e nuestra
+00:22:37.200 llave ssh Entonces qué Vamos a estar haciendo vamos a ir a la consola que la
+00:22:42.480 tenemos a la derecha y simplemente vamos a ejecutar este Comando ssh Ken t rsa
+00:22:50.480 2048 y genera la llave a la llave La vamos a estar llamando enginex server.key por qué Porque obviamente a
+00:22:58.240 todo lo estamos llamando con enginex server sí ejecutamos nos va a pedir la
+00:23:04.760 path phrase no le vamos a poner ninguna ninguna y ya está ya tenemos la clave ssh Si vemos y hacemos un dir vamos a
+00:23:13.120 ver que tenemos las dos claves nuestra Clave privada que está acá que la pueden
+00:23:18.320 ver y nuestra clave pública en aws nosotros tenemos que
+00:23:24.440 subir solamente la clave pública la PR Ada la guardamos con nosotros si es muy
+00:23:29.960 importante que ustedes agarren la guardan y no la comparten con absolutamente nadie bien Así que eh Ya
+00:23:38.080 tenemos creada nuestra nuestra llave ssh tanto la pública como la privada vamos a
+00:23:43.360 estar haciendo uso de esto sí eh necesitamos crearla vamos a venir y voy
+00:23:48.760 a copiar acá abajo fuera del bloque de código de el recurso de la máquina
+00:23:54.440 virtual voy a estar creando otro bloque de código que corresponde a nuestra
+00:24:00.039 clave ssh fíjense que acá ahora el recurso cambió ya no es aws instance
+00:24:07.320 sino que es aws key pair bien porque es justamente Cómo se llama eh en terraform
+00:24:14.760 el recurso de la clave ssh y después le puse un nombre identificativo que es enginex server
+00:24:21.720 ssh las propiedades que estamos poniendo es el nombre que va a tener en aws se va
+00:24:27.279 a llamar engine server ssh Y dónde está el archivo en este caso el archivo de la
+00:24:33.760 clave pública está en mi carpeta raíz donde tengo este archivo de main y se llama enginex server key.pub que lo
+00:24:42.399 vemos acá a la derecha es exactamente el mismo archivo lo que va a estar haciendo terraform es además de crear la
+00:24:49.640 instancia de s2 es subir esta llave en aws nos está faltando una parte si se
+00:24:56.600 dan cuenta que es conectar esta llave con esta instancia cómo hacemos eso
+00:25:02.000 bueno simplemente voy a venir y voy a copiarme una línea que tenía por ahí y
+00:25:07.279 con esto la estoy linkando fíjense que es la primera vez que estamos haciendo algo como esto que es ponerle una
+00:25:15.799 propiedad de keyn name dentro del recurso de instancia de aws linkear con
+00:25:22.320 otro recurso dentro del mismo código sí es como asignar una especie de variable algo parecido aws kir punto Qué nombre
+00:25:31.679 de nuestro recurso es enginex server ssh y Qué propiedad la Key name bien acá
+00:25:39.679 puede pasar y lo vamos a ver justamente ahora que nosotros podemos asignar otras propiedades si recuerdan el primer plan
+00:25:46.520 que hicimos aparecieron un montón de propiedades en la instancia que nosotros
+00:25:51.760 no habíamos asignado bueno acá le puedes asignar todas esas propiedades cualquiera de esas sí en este caso le
+00:25:58.200 vamos a estar asignando la Kame Ahora nos está faltando para Casi casi terminar el Security Group que es eh el
+00:26:05.200 firewall que habíamos hablado para abrir los puertos 80 y 22 Así que vamos a
+00:26:11.600 venir y vamos a crear ese recurso el del Security Group voy a venir acá abajo y
+00:26:17.520 en el mismo archivo muy importante vamos a crear otro nuevo recurso que esta vez
+00:26:22.799 se va a llamar aws Security Group de nuevo es el mismo nombre del recurso que
+00:26:28.039 necesitamos crear y el recurso lo llamamos enginex
+00:26:46.559 server-sent que es para el puerto 22 para el puerto 80 el cider block que le
+00:26:52.200 pongo es el 00 para que justamente acepte todo el tráfico de internet Y por
+00:26:58.080 último una regla de salida que en este caso la regla de salida muy importante le estamos poniendo desde el puerto cer
+00:27:05.559 al puerto cero Eso en aws significa que acepta todos los puertos si en cambio
+00:27:13.360 acá fíjense que en el 80 y en el 22 le puse desde el mismo número hasta el mismo número s esto como para recortar Y
+00:27:21.880 al igual que como hicimos con la Ke Necesitamos asignarle este Security Group a la máquina Así que vamos a venir
+00:27:28.480 acá voy a poner Esto me voy a copiar esta línea de código y se la voy a asignar Listo ya con esto tenemos
+00:27:35.200 asignada la bpc ID o el Security Group Mejor dicho ID acá sí fíjense que
+00:27:42.039 tenemos la propiedad punto ID que si se dan cuenta no existe la propiedad punto
+00:27:48.279 ID de hecho yo no la sé y no la voy a saber tampoco lo bueno de eso es que justamente vos quedas abstraído del ID
+00:27:56.399 del Security Group porque vos ya lo tenés importado en terraform y no te importa bien Le voy a estar creando
+00:28:03.519 simplemente esto acá Ahí está para que quede bien identificado los nombres de
+00:28:09.480 los recursos y una vez que ya hicimos todo esto Simplemente hay que ejecutarlo
+00:28:15.840 bien cómo hacemos para ejecutar Esto bueno como ya aprendimos antes vamos a
+00:28:20.880 venir acá voy a limpiar la consola y voy a poner terraform apply y listo con esto lo que
+00:28:28.919 va a hacer es ejecutar todo lo que acabamos de crear Espero no haberlos
+00:28:34.399 mareado pero es relativamente sencillo hasta ahora lo que estoy creando fíjense
+00:28:39.679 que acá muy importante el plan dice mira que vo a estar creando tres recursos no
+00:28:46.240 cambio ninguno ni tampoco destruyo nada porque solamente tengo que crear Bueno
+00:28:52.120 okay qué voy a estar creando y acá está todo absolutamente todo sí tenemos
+00:28:58.039 la instancia tenemos por acá abajo un poquito más abajo todas las propiedades el sch y un poquito más abajo tenemos el
+00:29:05.200 Security Group Perfecto es lo que queríamos crear Vamos a darle Sí para
+00:29:10.799 que siga creando la infraestructura y mientras voy a estar comitando este código Entonces vamos a estar
+00:29:17.640 poniéndole qué hicimos acá hicimos enginex más sq más Perdón más
+00:29:26.320 e Security Group Ahí está listo y voy a estar comiéndolo ya lo tienen en el
+00:29:32.640 repositorio que ya habíamos hablado en la presentación ya tienen el código si quieren lo pueden utilizar no hay ningún
+00:29:39.159 problema bien ya lo tenemos por acá acá abajo si les interesa le voy a estar
+00:29:44.200 dejando comentado el código para crear la clave ssh esto Sí ejecuten Dentro de
+00:29:52.399 esto directamente lo voy a poner acá arriba ahí así no se no se confunden bien Esto es para para generar la clave
+00:29:58.240 ssh la tienen que generar en su máquina y después si la pueden utilizar voy a
+00:30:03.320 ponerle acá arriba ssh K command Ahí
+00:30:14.000 está bien Bueno vamos a estar eh viendo
+00:30:19.600 lo que creo ahora vamos a ir para eh awc acá lo tenemos vamos a recargar
+00:30:27.279 nuestra instancia de s2 y acá vemos que ya tenemos
+00:30:32.440 inicializado nuestra máquina vemos que sigue siendo obviamente Una t3 Micro
+00:30:37.960 pero si entramos ahora y bajamos un poquito vamos a estar viendo algunas cositas muy importantes la primera es a
+00:30:45.919 nivel de seguridad vemos que ya tenemos un Security Group que si abrimos la
+00:30:51.279 regla de entrada vemos que tiene el puerto 80 el puerto 22 hab abierto a
+00:30:57.760 todo el mundo obviamente la regla de salida que le habíamos definido también abierta a todo el mundo y el nombre se
+00:31:04.240 llama enginex server sg que es como lo habíamos definido en terraform sí eh qué
+00:31:10.000 más habíamos hecho Bueno la clave es sh vamos para abajo tenemos acá abajo
+00:31:16.039 enginex server ssh fíjense si yo toco y venimos acá a las skers
+00:31:23.519 aparece nuestra clave sch Así que eh tenemos absolutamente todos los recursos
+00:31:29.720 creados directamente desde terraform en teoría ya está todo instalado no vamos a
+00:31:34.760 probar si esto funciona ustedes se animan a probar que esto esté funcionando yo sí me animo Así que voy a
+00:31:42.159 ir a la IP pública y le voy a poner acá abrir dirección ustedes pueden abrir un
+00:31:47.360 navegador y pueden escribir esto 3. 232
+00:31:56.159 132.17 y vamos a ver si esto está funcionando porque ya vimos que ya instaló ojo que es una t3 micro puede
+00:32:03.080 funcionar lento eso lo entendemos pero ya debería estar instalado no Bueno vamos a abrir la la
+00:32:09.760 URL no está pasando nada ojo no se asusten Por qué Porque aws por defecto
+00:32:16.600 Está abriendo en el puerto https en nuestro caso es el http porque
+00:32:21.960 es el 80 y acá á o magia acaba de ceder
+00:32:27.919 acabamos de instalar enginex en una máquina acabamos de abrir el puerto 80 y
+00:32:35.360 acabamos de eh Instalar todo lo necesario para
+00:32:40.639 nuestro escenario acabamos de finalizar nuestra práctica de terraform un aplauso
+00:32:46.039 para ustedes Bueno hasta acá las felicidades
+00:32:51.360 Sí el problema es que no terminamos acá Obviamente que el webinar sigue Y tenemos para rato y espero que les esté
+00:32:57.279 gustando porque tenemos todavía un ratito más sí eh voy a estar eh una
+00:33:02.880 última cosa que nos está faltando vamos a volver ahora qué está pasando ahora
+00:33:08.279 miren está pasando lo siguiente yo tengo una máquina acá que no sé qué es no sé
+00:33:14.639 para qué sirve no sé qué hace no sé de qué ambiente es esta máquina ustedes
+00:33:20.039 imagínense entrar a su consola de aws de aure de Google y ver una máquina virtual
+00:33:25.600 creada sin nada en mi caso me da un dolor de cabeza ver algo así me parece
+00:33:32.320 totalmente malo así que qué vamos a estar haciendo Bueno le vamos a estar añadiendo lo que dijimos que eran los
+00:33:38.399 tags no me olvidé estaba esperando a ver si ustedes estaban atentos así que vamos
+00:33:44.919 a estar terminando con la última modificación que habíamos hablado que es el de agregar los tags qué tags vamos a
+00:33:51.840 estar agregando Bueno vamos a estar agregando algunos algunos bastantes
+00:33:57.519 sí eh los recursos o los tags Mejor dicho que vamos a estar agregando son
+00:34:02.919 los siguientes acá los tengo sí el primero name Por qué Porque este name es
+00:34:09.960 el que le va a dar aws a la instancia es el que va a aparecer en la tablita que vimos que estaba vacío Bueno este name
+00:34:16.800 es el que se le va a asignar después environment Qué ambiente tiene esto Esto
+00:34:22.320 es crucial son algunos tags básicos que nosotros ponemos en todos los clientes que manejamos porque nos parecen
+00:34:29.119 esenciales al menos estos son los básicos que necesitamos tener sí environment en este caso estamos jugando
+00:34:36.480 estamos practicando Así que estamos en un ambiente de Test el Owner Quién es el
+00:34:42.239 Owner de este recurso este este tag de paso aprenden un poquito de devops es
+00:34:47.520 crucial si ustedes tienen cualquier recurso que no tiene un Owner está mal
+00:34:53.320 por qué porque necesitan tener un responsable para saber Quién creó ese recurso en este caso estoy poniendo mi
+00:34:59.480 mail me parece bastante acertado poner el nombre y además el mail para poder
+00:35:05.599 identificar a la persona correcta porque a veces quizás no sé tienen gente trabajando nosotros por lo general lo
+00:35:12.079 que nos pasa es que trabajamos en cuentas de aws que no son nuestras son
+00:35:17.520 de clientes Entonces quizás en ese cliente hay otros proveedores Cloud que también están trabajando y por eso Por
+00:35:25.280 lo general eh aclaramos hasta el mail bien como para poner la compañía después
+00:35:30.839 Team qué Team es el que está trabajando en esto es el team de deos es el team de frontend de backend etcétera y proyecto
+00:35:38.960 en este caso le estoy poniendo proyecto webinar porque es el que se me ocurrió bien vamos a agarrar estos tags y no
+00:35:45.960 solamente le vamos a poner los tags a la instancia sino que como buena práctica le vamos a poner tags a todos los
+00:35:52.800 recursos a la clave ssh también le vamos a poner recursos le vamos a poner tags
+00:35:58.880 Perdón Lo único es que vamos a estar cambiando el nombre en este caso le voy a agregar la palabrita gu ssh y al
+00:36:04.920 Security Group también le vamos a poner tags muy importante esto recuerden agregarle tags a todo absolutamente todo
+00:36:13.720 y ahora qué va a pasar Qué pasa si yo tengo miedo de probar esto Qué pasa si
+00:36:19.119 yo digo esto no sé si me termina de gustar o no sé qué hacer o sea
+00:36:24.480 literalmente tengo miedo de ejecutar esto bueno no se preocupen no se asusten vamos a limpiar la consola y simplemente
+00:36:30.720 vamos a poner un terraform plan si recuerdan terraform plan te va a mostrar
+00:36:37.040 lo que va a pasar en aws o en bueno la infraestructura que ustedes estén manejando Así que vamos a poner plan y
+00:36:45.119 literalmente terraform se va a conectar a nuestro proveedor que configuramos que en este caso es a va a ver qué
+00:36:52.560 infraestructura Ya está creada de todo nuestro manifiesto y va a volver con la diferencia en este caso como resumen
+00:36:59.680 vemos que dice plan cero agregar porque no agrega ningún recurso tres van a
+00:37:05.880 cambiar y cero a destruir Okay bien Vamos a ver un poquito más arriba el
+00:37:11.079 detalle fíjense tenemos en el recurso aws instancia engine server va a agregar
+00:37:17.400 estos cinco tags Esta es otra propiedad que es tags all No se preocupen no importa fíjense en esta en tax bien en
+00:37:24.599 la keir también le va a agregar estos cinco tags Y de nuevo en las en el Security gr lo va a agregar listo es
+00:37:31.800 buenísimo es como Listo ya está yo sé lo que va a estar pasando en mi infraestructura y no neces hacer absolutamente más nada que esto Bueno
+00:37:39.359 vamos a venir y como ya sé lo que va a pasar Vamos a ponerle un apply algo que está muy bueno de lo que estamos
+00:37:45.560 haciendo ahora mismo es que si ustedes agarran el mismo código que está en el
+00:37:51.040 repositorio y aplican esto van a tener como resultado exactamente la misma infraestruc estructura que yo les estoy
+00:37:57.800 mostrando ahora no van a tener absolutamente ningún cambio no va a haber ninguna diferencia Y eso es lo
+00:38:05.560 potente de usar infraestructura como código o sea de usar terrafor sí no es
+00:38:10.920 la única obviamente pero s es una de las más
+00:38:16.340 [Música] populares bien ya se aplicó nuestros
+00:38:23.280 cambios de tax vamos a volver a eh nuestra consola WS y vamos a estar
+00:38:29.760 recargando para ver si se aplicaron de verdad todos los cambios vemos que ahí
+00:38:35.720 Okay vamos a poner running listo vemos que ahora sí ya nuestra máquina tiene
+00:38:41.720 una un nombre y si vamos acá a la derecha donde dice tags vemos que tenemos absolutamente todos los tags de
+00:38:50.040 nuestra infraestructura que le definimos vemos que tiene un equipo que tiene un Owner que tiene un nombre que tiene una
+00:38:56.520 ambiente que tiene un proyecto listo es buenísimo bien Vamos al Security Group
+00:39:01.560 si quieren ir al Security Group para ver si no me creen estamos en el Security Group vamos a tags y también tiene
+00:39:07.880 exactamente los mismos cinco tags volvemos para atrás vamos a ir a la clave sh esto ya sé que es molesto
+00:39:14.680 quizás para ustedes pero si venimos acá y creo que Ah bueno esta no la puedo ver no tengo que hacer otra cosa bueno Eh me
+00:39:22.359 arrepentí no le voy a mostrar la del sec la de la clave ssh vamos a y lo vamos a
+00:39:27.480 dejar acá outputs en terraform Qué son los outputs Bueno si ustedes recuerdan en
+00:39:28.000 No text
+00:39:35.520 los ejemplos anteriores para comprobar que nuestra máquina virtual estaba
+00:39:40.640 prendida y tenía el servidor de enginex prendido teníamos que averiguar la IP del servidor y para entrar Y averiguar
+00:39:47.720 la IP del servidor había que abrir la consola de aws e ir a buscar cuál era la
+00:39:53.319 IP pero no existe una forma de decir la me podes dar esta IP del servidor así yo
+00:40:00.160 no tengo que ir a buscarla y terraform te dice obvio papá que existe una forma y cuál es justamente la de outputs
+00:40:08.079 Entonces qué hacemos para configurar un output bueno simplemente usamos el bloque de código llamado
+00:40:15.079 output y obviamente que bueno Esto el output ya lo dije antes pero sirve para mostrar la información resultante de la
+00:40:21.920 infraestructura cómo hacemos simplemente es output un que le estamos poniendo
+00:40:27.680 para identificar a ese output una descripción de forma opcional te dice bueno en este caso es dirección IP
+00:40:33.839 pública de la instancia s2 y está la parte más clave que es el valor y acá en
+00:40:39.560 este caso le estamos identificando el valor de awc instance nuestra máquina
+00:40:45.079 engine server publicu iip que es la propiedad justamente public ip de la
+00:40:51.560 instancia de s2 que es la ip pública y con esto ya una vez apada la
+00:40:57.720 infraestructura terraform te va a devolver la IP pública y si no me creen vamos a aplicarlo en nuestro código y
+00:41:05.160 ahora sí vamos a estar agregando los outputs qué hacemos bueno como vimos
+00:41:10.880 recién los bloques de código de outputs en mi caso para el ejemplo de ahora agregué dos
+00:41:17.319 outputs tanto server public IP como server public dns Por qué Porque aws
+00:41:26.359 además de darte una IP pública te da un dns Que obviamente es gestionado por
+00:41:31.480 ellos pero sirve igual Sí así que simplemente venimos agregamos estos
+00:41:37.599 outputs y vamos a venir acá a la izquierda y le vamos a poner terraform
+00:41:42.800 apply simulando que estamos aplicando esta infraestructura como viemos ya está creada Así que no va a haber ningún
+00:41:49.359 cambio pero solamente le quiero mostrar para que eh saque como resultado los
+00:41:54.520 outputs si ustedes quieren eh podemos destruir todo y volver a construir Pero
+00:41:59.920 la verdad es que no tiene ningún sentido hacer eso porque ya vimos que funciona en este caso dice bueno el cambio que
+00:42:05.520 vamos a estar agregando son las salidas no que esto no está cambiando absolutamente nada y acá abajo fíjense
+00:42:11.400 que esto es lo importante dice outputs y te da los dos valores bien entonces si
+00:42:17.440 no me creen ahora o si les parece más fácil podemos venir y hacer un cur a esta
+00:42:23.440 IP obviamente por http http do pun barra este IP y fíjense que nos devuelve
+00:42:31.079 nuestro Welcome to engine x o sea que ya ni siquiera es necesario entrar a la
+00:42:36.800 consola de aws para tomar una propiedad directamente la puedo ver por acá y
+00:42:43.119 tengo que aplicar una apply por cada output que quiero ver no obviamente que no El Comando oficial de outputs En
+00:42:51.359 realidad se llama terraform outputs No me acuerdo si es con ese o si es por las
+00:42:56.880 dudas me confundí sin ese me puede pasar es terraform output Ahí está y fíjense
+00:43:05.200 que nos devuelve las dos salidas las dos propiedades que acabamos de definir acá abajo y si yo tengo 500 output o salidas
+00:43:13.520 y Quiero ver una sola bueno simplemente terraform output y el nombre de la
+00:43:19.559 propiedad en este caso server public IP y Listo ya tenemos nuestra IP
+00:43:26.599 de el servidor de C2 ya está pueden ir de nuevo a ejecutar e Esa esa IP en sus
+00:43:34.400 computadoras en Puerto 80 y le va a devolver el engine x que acabamos de crear bien
+00:43:40.359 eh algo que no probamos que me acordé Recién ahora mismo y que muy mal que no
+00:43:46.040 me lo dijeron es la conexión por ssh a la máquina porque hasta ahora vimos que
+00:43:52.040 funciona el puerto 80 pero no vimos que funciona el puerto 22 Así que vamos a estar probándolo
+00:43:58.680 habíamos hablado hace un rato de qué usuario se crea bueno la Amazon Linux
+00:44:04.040 crea por defecto una instancia de eh Perdón la Amazon Linux crea un
+00:44:10.200 usuario que se llama s2 user Así que vamos a estar haciendo s s2 user @ la IP
+00:44:18.920 justamente que ya la tenemos acá arriba Eh Perdón vamos a copiar esto pegamos y
+00:44:25.280 qué clave qué clave vamos a estar usando bueno menos y para decirle qué clave vamos a estar usando y la llave Déjenme
+00:44:32.079 acá arriba buscarla porque no me acuerdo cómo se llamaba le habíamos puesto a enginex server Ahí está enginex
+00:44:38.640 server.key en este caso vamos a estar obviamente utilizando la clave privada de eh nuestra máquina para poder
+00:44:47.160 conectarnos a la llave pública del servidor si no saben cómo funciona la
+00:44:52.720 clave pública y Privada bueno Es simplemente eh algo que literalmente yo
+00:44:58.599 a la pública la puedo compartir con quien se me cante y solamente va a validar esa llave con la privada que la
+00:45:05.880 privada como bien indica su nombre la tienen que guardar ustedes y no la tienen que compartir con nadie así que
+00:45:12.200 simplemente vengo y digo Bueno me Quiero conectar por ese ch y me dice Bueno Che Mirá Te acabo de encontrar este Host
+00:45:18.800 para vos es válido Sí sí es válido bueno Listo Ya está ya estoy adentro de la
+00:45:24.559 máquina fíjense que dice Amazon Linux 2023 así que ya puedo conectarme con esa
+00:45:30.079 máquina qué haría yo como devops Bueno le compartiría esta Clave privada al
+00:45:35.920 equipo que me contrató o a la empresa para que ellos se puedan conectar obviamente que la mejor práctica de
+00:45:41.520 seguridad es que ellos me pasen sus claves públicas y yo las instalo acá en
+00:45:48.480 esta en esta máquina bien Pero nada no viene eh al caso si simplemente un
+00:45:55.359 ejemplo Así que vamos a agarrar y vamos a salir de la instancia Ya vimos que
+00:46:01.400 tenemos todo funcionando nos falta eh quizás un poquito de
+00:46:07.359 eh de cosas pero ya estamos bastante bastante bien si voy a estar agregando
+00:46:12.680 al repositorio outputs para que los tengan si lo quieren tener e en gih pueden ir y verlo
+00:46:21.680 al código y cómo fue evolucionando que eso es algo muy bueno de esta infraestructura como código hasta acá
+00:46:27.000 No text
+00:46:29.000 llegamos a digamos eh los elementos básicos de terraform Sí vamos a entrar a
+00:46:36.720 un nivel un poquito superior vamos a estar mejorando nuestro
+00:46:43.400 código hasta ahora el código que tenemos es funcional Pero si ustedes saben un
+00:46:48.720 poco de programación a veces acá creo que hay gente que es programadora saben que hay cosas que no es tan buena no
+00:46:56.119 como hay cosas jcad cosas en un solo lugar eh Hay cosas que no que se pueden
+00:47:03.280 mejorar obviamente y Qué pasa si yo quiero crear más máquinas y bueno no
+00:47:09.040 puedo ahora porque ahora crea esta máquina que estamos creando ahora o sea no crea otra Así que justamente vamos a
+00:47:15.200 agarrar todas estas mejoras y vamos a estar mostrándola una por una para que ustedes aprendan y vean el poder que
+00:47:22.440 tiene terraf variables en raf las variables
+00:47:28.119 son algo fundamental en cualquier código porque justamente por si no saben las
+00:47:34.000 variables te permiten darle un valor a una propiedad que pueda ir variando por
+00:47:40.680 ejemplo yo quiero ir cambiando y acá vamos a las configuraciones la ami ID
+00:47:47.599 imaginemos que tengo distintas amis para distintos ambientes y quiero ir cambiándolas Bueno creamos una propiedad
+00:47:56.400 una variable que se llama ami ID y después le vamos cambiando el valor depende el ambiente depende eh En qué
+00:48:04.680 entorno estamos manejando simplemente cambiamos esa propiedad pero en el código siempre estamos apuntando a una
+00:48:11.160 variable entonces las variables en terraform son usadas para parametrizar y personalizar la configuración de la
+00:48:17.839 infraestructura en este caso hay que hay que usar el bloque llamado variable le
+00:48:24.400 ponemos un nombre a todo le ponemos fíjense un nombre para identificarlo una descripción y un valor por defecto bien
+00:48:32.839 después por otro lado al recurso que hace uso de esa variable en lugar de tener hardcodeado el valor usamos la
+00:48:40.160 palabra clave bar bar punto y el nombre de la variable fíjense que es el mismo
+00:48:46.160 nombre que definimos acá a la izquierda esto en código y saben programar es muy
+00:48:52.400 similar a declaras una variable y después la utilizá la diferencia acá es
+00:48:57.799 que en terraform siempre o casi creo que casi siempre tenés que definirle un
+00:49:03.640 valor por defecto en realidad Estoy seguro que siempre tenés que definirle un valor por defecto bien porque si no
+00:49:10.079 se rompe y después acá abajo hay otro archivo que yo le estoy dándole el valor
+00:49:16.720 distinto al que tiene por defecto bien fíjense que acá directamente hacemos la
+00:49:22.760 variable que ya la definimos antes que le dimos un valor por defecto se la asignamos a un recurso que queremos
+00:49:29.040 utilizar y después podemos tener muchos archivos distintos uno que sea por ambiente uno por cliente uno por entorno
+00:49:36.920 uno por eh No sé espacio de trabajo bueno definimos distintos valores y cada
+00:49:43.760 archivo por separado simplemente apunta a una variable distinta y usamos todos el mismo código bien Vamos a eh Ya
+00:49:52.119 aprendido lo que es la variable y vamos a estar implementando la en nuestro código fuente vamos a ir a visual Studio
+00:50:00.319 code vamos a limpiar la consola y lo que voy a estar haciendo es
+00:50:06.640 eh simplemente vamos a venir arriba de todo bien de este código y sí vamos a
+00:50:13.480 estar creando nuestras variables voy a aprender esto bien Ahí estamos así
+00:50:20.359 sabemos qué estamos haciendo y vamos a venir a variables y vamos a estar definiendo cuat variables en mi caso
+00:50:27.319 para que sea un poquito bastante simple pero no tan simple definí cuatro
+00:50:34.319 variables una que es ami ID que es obviamente para la imagen de Amazon en
+00:50:39.880 este caso es la que venimos usando un tipo de instancia por defecto le vamos a decir que cree una t3 micro un nombre
+00:50:47.119 del servidor que por defecto es web server y un ambiente que por defecto es test bien Ahora como ya vimos antes lo
+00:50:54.920 que tenemos que hacer es venir a las propiedades que hacen uso de esas variables y reemplazarlas venimos acá Y
+00:51:01.880 en lugar de tener este código hardcodeado ponemos bar a miid venimos
+00:51:07.880 el tipo de instancia y ponemos bar instance type ahora vamos de nuevo el
+00:51:14.640 nombre el nombre de la de la instancia y si lo tenemos porque era el server name y el ambiente también lo tenemos es bar
+00:51:23.760 environment si cuenta debería haber agregado estas tres variables también la
+00:51:29.000 de Owner la de team y la de project en mi caso no lo quiero poner para no seguir alargando el código porque
+00:51:36.280 simplemente quiero que aprendan cómo funciona una variable Pero si ustedes quieren pueden descargar este código y
+00:51:42.280 adaptarlo a a ustedes y agregarle estas tres variables está bien bueno qué más acá
+00:51:51.119 entramos en una parte muy divertida para mí que es la de concatenar si hasta
+00:51:56.720 ahora veníamos simplemente declarando una variable que tomaba todo el valor de
+00:52:02.559 la propiedad en este caso por ejemplo a miik yo quiero que tenga el nombre del
+00:52:07.640 servidor porque es literalmente este server name pero le quiero concatenar el s cómo hacemos Esto bueno simplemente
+00:52:15.040 venimos a este bloque de código voy a seleccionar los tres porque en los tres
+00:52:20.200 está pasando Exactamente lo mismo eliminamos y ponemos llave y llave
+00:52:25.720 abierta Perdón signo pesos y llave abierta y llave cerrada y ahora sí bar
+00:52:30.960 server name bien si se fijan ahora lo que va a estar pasando Es que nuestra
+00:52:36.359 llave siempre va a estar linkada a nuestro nombre del servidor Entonces el
+00:52:42.880 día de mañana si necesitamos crear dos o tres servidores vamos a tener que crear dos o tres llaves o sea que hay que
+00:52:49.599 correr este Comando eso sépanlo es una buena práctica que cada instancia Tenga sus llaves sh Pero si ustedes no la
+00:52:56.880 quieren así van a tener que hacer el cambio correspondiente está bien en mi caso sí lo voy a estar dejando así y
+00:53:03.480 este también ya que estamos con las variables concatenadas vamos a venir y ponerle environment listo de nuevo
+00:53:10.160 Security Group nos está pasando Exactamente lo mismo vamos a venir acá abajo y ponemos signo pesos
+00:53:16.079 eh llaves bar punto en este caso era server name de nuevo y el environment lo
+00:53:24.119 teníamos de nuevo
+00:53:29.480 environment y ya está ya tenemos definidas las variables bien Vamos a ver
+00:53:37.960 qué pasó qué hicimos hasta acá cambiamos algo bueno vamos a ver vamos a aplicar
+00:53:44.520 un terraform plan a ver qué está pasando adentro del cambio o sea nosotros no
+00:53:49.599 queremos cambiar las cosas queremos mantenerlas Así que vamos a ver corramos el terraform y veamos a ver qué
+00:54:00.880 pasa Okay bien fíjense que se está
+00:54:06.280 rompiendo ya que se está rompiendo Nos está dando una Pauta de que hay algo que no está bien y qué es lo que no está
+00:54:13.079 bien bueno si prestan atención al error les está diciendo Mira Fíjate que la
+00:54:18.920 ruta que me estás dando para la llave pública no existe no existe ningún web
+00:54:24.559 server i. p que yo pueda subir al repositorio Por qué es esto porque el
+00:54:31.040 valor por defecto que le estoy tomando que le estoy dando se llama web server no
+00:54:36.720 es en este caso le habíamos definido enginex server no es el mismo no existe
+00:54:42.359 Entonces no puedo seguir Bueno okay Está bien hasta ahora lo vamos a estar
+00:54:47.559 dejando ahí lo que puedo hacer por ahora para no crear el otro archivo que ya les expliqué antes es venir y ponerle a la
+00:54:54.520 variable eng server Y por qué lo estoy haciendo así no se preocupen esto es
+00:55:00.240 todo parte del plan si no estamos haciendo nada fuera
+00:55:06.760 de de lo acordado de lo programado está bien Es todo parte del plan que falle
+00:55:13.079 también listo Ahora sí bien qué genial tenemos variables de entorno yo ahora
+00:55:18.880 como vieron recién puedo venir y al ambiente en lugar de ponerle test le quiero poner
+00:55:25.920 webinar y le quiero cambiar el ambiente puedo hacer esto bueno ejecutemos otro
+00:55:30.960 plan y veamos a ver qué pasa simplemente lo cambié en un solo lugar y ahora Esto
+00:55:36.200 está referenciando en todos los recursos que creamos y obviamente que sí te va a decir bueno Mirá te voy a crear o te voy
+00:55:42.680 a cambiar el tag environment de Test a prueba webinar Okay listo no lo vamos a
+00:55:48.799 hacer porque no viene al caso pero ya con esto podemos ver que tenemos
+00:55:54.000 aplicadas nuestras variables vamos a poner variables y ya lo tienen pulado
+00:55:59.880 para que ustedes lo puedan eh ver al código Bien listo ya vimos algo super
+00:56:07.160 importante que son las variables eh voy a estar escondiendo esto voy a
+00:56:13.680 estar preparándolo para el próximo y vamos a ir directamente a eh la presentación porque
+00:56:22.119 nos está faltando algo más esta parte acá abajo esto de amid es parte del plan pero viene
+00:56:30.440 acompañado con algo más y Qué es ese algo más bueno lo tenemos acá en
+00:56:36.000 No text
+00:56:36.119 adelante archivos terraform como ya les mencioné necesitamos
+00:56:43.000 separar el código en archivos vamos a estar separando todo
+00:56:50.920 nuestro código que hasta ahora vimos que funciona y que es lo que nosotros
+00:56:56.359 necesitamos en distintos archivos qué vamos a estar haciendo simplemente creamos como vemos acá a la derecha
+00:57:02.960 estos este Touch este Comando para poder crear distintos archivos Cuáles Bueno
+00:57:08.359 uno para variables uno para el proveedor uno para la instancia s2 otro para la llave otro para el Security Group y uno
+00:57:15.559 nuevo que se llama terraform tf Bars si recuerdan todos los
+00:57:22.599 archivos de terraform son punto tf y qué es este tf Bars bueno es el famoso
+00:57:29.640 archivo que tiene todas las variables de nuestra infraestructura en este caso el
+00:57:37.079 primer archivo define las variables y el último archivo le da el valor a esas
+00:57:43.680 variables sí por las dudas para mantener el orden y la estructura Es recomendable
+00:57:49.400 archivos chicos que cumplan una funcionalidad en este caso teníamos un
+00:57:54.480 arch archivo gigantesco que hacía de todo y claramente como saben no es muy
+00:58:00.079 mantenible eso a lo largo del tiempo así que vamos a estar haciendo esto mismo vamos a estar separando nuestro código
+00:58:06.440 en muchos archivos chiquititos así que vamos a venir para acá vamos a venir al
+00:58:13.640 repositorio y voy a estar habilitando esta este Esta banderita bien Ahora sí
+00:58:22.640 lo que tenemos que hacer como vimos recién voy a estar limpiando esta esta consola de nuevo para que
+00:58:29.880 quede linda ahí y ahora simplemente Hay que crear distintos archivos bien eh yo
+00:58:35.160 voy a venir y vamos a estar ejecutando ese Touch yo voy a abrir un gitbash al
+00:58:41.000 lado Solamente porque estoy con power shell y no me funciona el comando Touch ahora sí me crea todos estos y volvemos
+00:58:47.920 al de Power shell cómo hacemos la separación en archivos bueno es tan
+00:58:53.599 fácil como venir y literalmente agarrar todo este bloque de
+00:58:58.720 variables control x variables lo pegamos ya está cerramos Provider de nuevo
+00:59:07.559 cortamos vamos a Provider pegamos y así con cada recurso voy a estar achicando
+00:59:12.880 esto para que sea un poco más fácil ahí estamos tenemos el recurso de instancia
+00:59:19.200 de s2 venimos acá lo guardamos vamos al ssh venimos acá el Ke lo guardamos bien
+00:59:27.480 Security Group y
+00:59:36.440 outputs listo ahora nuestro archivo de main quedó vacío lo podemos borrar
+00:59:42.039 literalmente vamos a venir eliminamos y siempre pero siempre para probar que
+00:59:48.520 esto funciona vengan y ejecuten un plan antes de comar el código ejecuten un
+00:59:54.079 plan para para ver si todo funciona correctamente Eh ya vemos que está funcionando pero qué pasa no estamos
+01:00:01.119 asignándole todavía el archivo este el de terraform Bars está literalmente
+01:00:06.280 vacío qué vamos a estar haciendo bueno vamos a estar asignándole todos los valores de un ambiente ya un poco más
+01:00:14.400 serio si ustedes recuerdan nuestro archivo de variables como valor por defecto por ejemplo en ambiente lo
+01:00:21.880 teníamos como test Por qué Porque esto es simplemente un ambiente de prueba que estamos creando que estamos usando y una
+01:00:29.160 máquina que es t3 micro que es una máquina relativamente chica está bien Ahora nosotros ya queremos pasar a un
+01:00:35.960 nivel un poquito Superior y ya queremos empezar a trabajar en un ambiente un poco más serio Así que vamos a estar
+01:00:44.319 definiendo esto vamos a estar agarrando el archivo terraform tfbs y le vamos a
+01:00:51.319 estar haciendo las asignaciones de variables en este caso fíjense que el tipo ya lo subí a un t3 medium Porque
+01:00:59.119 necesitamos una máquina más potente para instalar engine x y vamos a pasar el
+01:01:05.920 ambiente a dev ya sabemos que nuestro entorno de trabajo va a empezar a hacer
+01:01:11.760 desarrollo Obviamente que si venimos acá y ejecutamos terraform plan lo que
+01:01:17.640 debería pasar es que se va a dar cuenta de estos dos cambios y lo va a querer
+01:01:22.680 ejecutar está bien esperemos miremos y vemos que e Bueno me está diciendo que no hay
+01:01:29.520 cambios Ah porque no guardé el archivo Espero que hayan estado atentos a que no guarde el archivo Ahora sí
+01:01:36.200 vamos de nuevo y vamos a ejecutar de nuevo el terraform
+01:01:42.850 [Música]
+01:01:48.240 plan Bien listo fíjense que nos está diciendo bueno Mirá vos vas a cambiar el
+01:01:53.520 tag deon y lo que vas a estar haciendo después en algún otro lugar acá es cambiar el tipo
+01:01:59.640 de instancia Okay si querés te lo hago no hay ningún problema y yo ahora y le digo eh Bueno sabes qué Dale hagámoslo
+01:02:08.359 vamos a poner eh vamos a venir acá abajo y vamos a poner terraform apply sí Yo quiero crear
+01:02:15.119 esto Dale vamos a hacerlo va a correr de nuevo va a
+01:02:23.200 aplicar todo esto y nos va a preguntar queres que lo hagamos de verdad sí sí hacelo dale no hay ningún
+01:02:30.440 problema y acá lo va a modificar sí va a estar cambiando el tipo de instancia con lo cual va a tardar un ratito Está bien
+01:02:37.200 no se preocupen no se asusten pero va va a tardar Ahora yo les había dicho que
+01:02:44.240 este archivo lo podemos usar para tener diferentes entornos cómo hacemos eso
+01:02:51.160 bueno algo que no les expliqué y que no no no sé no no me están preguntando lo
+01:02:56.599 cual me pone un poco nervioso es que el terraf plan cómo sabe que tiene que leer
+01:03:02.400 estos valores bueno porque por defecto El Comando Terra for plam Busca un
+01:03:09.079 archivo que se llama terraform tfbs Pero qué pasa si yo de repente
+01:03:15.039 quiero tener unas variables para qa y una para desarrollo bueno simplemente
+01:03:20.720 vamos a crear un nuevo archivo y a este le vamos a poner q tf Bars y acá ya lo tenemos el archivo
+01:03:27.720 qa tf Bars qué le vamos a estar haciendo al archivo de qa bueno por ejemplo le vamos a poner en lugar de una medium le
+01:03:35.319 podríamos poner una x large Y en lugar de de le vamos a llamar tag qa está bien
+01:03:42.440 Ahora lo que va a estar pasando Es que lo vamos a estar dejando ahí porque está haciendo los cambios no lo vamos a estar
+01:03:47.720 modificando Ah mira acá Acaba de terminar Ok lo que va a estar pasando Es que yo ahora quiero aplicar Esta nuevo
+01:03:55.720 archivo de tf Bars no cómo hago bueno terf plan y acá vamos a tener que poner
+01:04:02.319 menos menos bar file igual y qué nombre q. tfbs bien esperamos un segundito y va
+01:04:11.640 a estar leyendo y va a estar haciendo todos estos cambios Sí y ya con esto tenemos un archivo de desarrollo y uno
+01:04:17.680 de qa y fíjense que va a querer hacer estos cambios si yo no lo voy a estar haciendo porque no tiene ningún sentido
+01:04:24.480 en este caso pero fíjense que ya con esto puedo tener distintos archivos para distintos entornos ojo muy importante
+01:04:32.359 presten atención a algo no significa que esto va a crear dos máquinas virtuales s2 una para qa y una para dev no Por qué
+01:04:42.079 Porque estos recursos están asociados a estos nombres como ya vimos antes a este
+01:04:48.200 recurso al de a wc instance enginex server no está asociado a un eng server
+01:04:55.079 dev engine server gu qa Aunque nosotros le cambiemos el tag name que
+01:05:01.160 literalmente estamos cambiando el nombre de la instancia para terraform en su
+01:05:06.640 definición de recurso es exactamente el mismo recurso no cambió nada Entonces no
+01:05:13.039 estás pudiendo crear dos máquinas separadas con distintas configuraciones
+01:05:18.119 pero con el mismo código eso todavía no lo estamos haciendo se puede hacer Obviamente que
+01:05:24.960 se puede hacer pero todavía no así que e se van a tener que quedar todavía con las ganas para saber cómo se hace pero
+01:05:32.559 mientras voy a estar limpiando esta consola y vamos a estar pusheando estos cambios como ya vimos estamos separando
+01:05:39.480 en archivos Sí y lo estoy subiendo esto Recuerden que está el código de github
+01:05:45.839 pueden ir al repositorio que en la descripción está el código de el link al
+01:05:51.240 github y ahí va a estar el repositorio webinar Terra form y deberían estar viendo todos estos comits sí eh acá creo
+01:05:58.559 que no tengo forma de ver todos los comits no me parece en a ver acá Bueno no no quiero andar
+01:06:05.119 perdiendo tiempo en esto pero si puedo ver todos los comits vamos a estar viendo cómo fue evolucionando el código
+01:06:10.480 y es de la misma infraestructura y eso está buenísimo está bien bueno ya
+01:06:16.480 separamos en archivos ahora lo que sigue es algo
+01:06:23.160 hermoso Sí vamos a estar destruyendo no no voy a estar destruyendo nada por ahora eh Le
+01:06:30.200 voy a estar mostrando primero y después lo vamos a estar destruyendo a esto bien Espero que hasta acá les esté gustando
+01:06:38.000 estén aprendiendo Porque todavía
+01:06:43.400 falta Recuerden que ya mejoramos estamos en el proceso de mejorar el código ya le
+01:06:50.119 asignamos variables y ya lo separamos en archivos ahora estábamos con esto de que
+01:06:56.319 Qué pasa si yo quiero crear dos máquinas virtuales que tengan toda esta misma configuración para dos entornos
+01:07:03.279 distintos Cómo hago eso bueno para eso están los módulos de terraform los
+01:07:10.000 No text
+01:07:11.160 módulos de terraform no son Ni más ni menos que código que vos
+01:07:22.920 empaquetándolo y reutilizar bloques de configuración los módulos de terraform
+01:07:29.720 son importantísimos para poder justamente tener tu infraestructura modularizado y
+01:07:37.279 algo que todavía es mejor aún que estos módulos son públicos que la misma
+01:07:46.680 empresa o la misma proveedora los crea y los publica o si vos querés podés crear
+01:07:53.160 tus módulos privados que solamente van a tener acceso no sé los de tu empresa por
+01:07:58.440 ejemplo Es una herramienta crucial que aprendan a usar esto ya es
+01:08:04.680 terraform bastante avanzado porque no estamos solamente haciendo uso de un módulo sino que ahora mismo vamos a
+01:08:11.319 estar creando nuestro primer módulo de terraform s vamos a ir
+01:08:17.439 a nuestro repositorio y vamos a estar creando justamente nuestro módulo de
+01:08:25.799 terraform Bien voy a estar poniendo esto y vamos a estar creando nuestros módulos qué hay que hacer Bueno lo único que
+01:08:32.600 tenemos que hacer es guardar todas estas todos estos archivos en una carpetita si
+01:08:37.880 vamos a estar le vamos a poner una carpeta que si vieron El ejemplo lo
+01:08:43.960 tenía por ahí voy a estar creando la carpeta que se va a llamar enginex server modu bien modle y vamos a estar
+01:08:52.279 copiando absolutamente todos los archivos voy a venir y arrastrar y los
+01:08:57.560 ponemos adentro de la carpeta bien este de qa tfbs ya lo borramos porque ya no
+01:09:03.439 nos interesa Y este terraf tf Bars ahora tampoco lo vamos a estar utilizando Pero
+01:09:08.960 lo dejamos ahí porque quizás después lo volvamos a utilizar qué tenemos que hacer volver a crear nuestro main.tf el
+01:09:16.759 que eliminamos se acuerdan bueno volvió en forma de fichas por qué porque acá
+01:09:21.799 vamos a estar haciendo la declaración del módulo Sí cómo hacemos Esto bueno simplemente con el bloque de código o
+01:09:29.158 con nuestra sentencia module como vimos antes fíjense que es Exactamente igual a
+01:09:35.399 todas las otras estructuras de terraform módulo una palabra clave con un ID nada
+01:09:42.319 más Qué propiedad vamos a estar utilizando bueno el origen dónde está este módulo en este caso mi módulo está
+01:09:50.439 en esta carpeta enginex server modul que acabamos de crear Y qué variables va a estar utilizando bueno todas las que ya
+01:09:56.679 vimos antes sí a mi ID instance type server name Y environment por qué porque
+01:10:02.880 yo ya me copié todas las todas las variables entonces son exactamente las
+01:10:08.640 mismas sí Ahora qué pasa Qué pasa si yo ahora ejecuto un terraform plan bueno
+01:10:16.040 acá empiezan eh algunos temitas con terraform por qué porque nosotros ya
+01:10:21.760 tenemos creado un un directorio ya lo
+01:10:27.520 inicializar nuestras librerías de plugin digamos nuestro
+01:10:33.280 provider Pero ahora terraform no sabe qué hacer porque en realidad este módulo
+01:10:38.480 es el que tiene el Provider no es el propio código Entonces se resume a que
+01:10:44.239 necesitamos volver a inicializar nuestro directorio hay que volver a hacer un terraform init por cada módulo que
+01:10:51.080 nosotros usemos tenemos que hacer Ah lo detectó listo Es simplemente una
+01:10:57.960 pavadita pero fíjense que hasta ahora no habíamos inicializado nuevamente nuestro
+01:11:04.360 init solamente habíamos usado el plan y el apply nada Ahora qué pasa le pongo un
+01:11:10.320 Terra plan para ver qué pasa en teoría no cambia nada pero si prestan atención
+01:11:18.320 el server name ahora lo llamamos eng server
+01:11:24.120 ahora ya no se llama más enginex server Qué significa esto que ahora sí vamos a
+01:11:30.159 estar creando un una instancia para dev y futuramente una para
+01:11:37.480 e qa o para prod sí en este caso lo que hay que hacer es renombrar el archivo de
+01:11:44.320 Ke y agregarle el guion dev adelante bien yo voy a venir acá lo tengo por acá
+01:11:49.639 en este kap y simplemente le vamos a agregar acá adelante kion dep listo
+01:11:57.280 Ahora sí si venimos de nuevo al módulo Y aplicamos de nuevo el plan voy a estar achicando esto y vamos a poner terraform
+01:12:04.320 plan de nuevo vamos a ver qué pasa porque ya el punto el archivo punto pap
+01:12:09.520 de la clave ssh Ya está ya debería funcionar Bueno ahí estamos sí lo que
+01:12:15.840 está diciendo acá es Mira Che algunas variables que eh No están dice Bueno
+01:12:21.320 okay vamos a eh estar dejando las porque esto lo que está haciendo es yendo a buscar nuestro archivo de tfbs se da
+01:12:29.360 cuenta que existe un tfbs pero no lo estamos usando Entonces está diciendo qué hacemos Bueno si ustedes quieren
+01:12:34.840 vamos a venir y vamos a borrarlo para que no se asusten y acá esto lo que más me interesa que presten atención acá
+01:12:41.400 arriba el plan dice que va a agregar tres máquinas y va a destruir tres máquinas Por qué Porque la clave ssh
+01:12:48.560 cambió es otra y eso está atado a la instancia y está atado al Security Group porque si recuerdan el Security Group
+01:12:54.560 está atado al nombre de la instancia Así que podríamos hacer una apply y podríamos simplemente aplicar y que haga
+01:13:02.639 su magia Así que vamos a venir vamos a achicar esto y vamos a ponerle terraform
+01:13:07.719 apply bien Esperemos fíjense que el apply ya se da cuenta lo que tiene que
+01:13:13.239 crear y lo que tiene que destruir o sea es magnífico no hay absolutamente nada que hacer acá simplemente vamos a
+01:13:19.360 agarrar y le vamos a poner 10 y esto se va a encargar absolutamente solo de hacer su magia sí Obviamente que lo
+01:13:27.080 que va a estar destruyendo es la instancia de s2 El Security grp y la clave sh Obviamente que acá es la misma
+01:13:34.560 ya sabemos que es la misma porque le cambiamos el nombre pero si ustedes realmente crearon otra ssh ya va a ser
+01:13:41.080 otra si de hecho vamos a estar creando una más ahora para cua Para que vean que literalmente son dos archivos
+01:13:52.360 distintos
+01:14:01.920 Bueno podemos observar algo importante es que ya desapareció los Warning que habíamos visto antes así que era
+01:14:08.600 Simplemente porque había un tf Bars que no sabía que no se estaba usando así que er un Warning No se preocupen no se
+01:14:14.840 asusten todo funciona todavía correctamente listo el apply ya está
+01:14:20.880 hecho ya está ya tenemos absolutamente todo funcionando y si no me creen vamos
+01:14:27.679 a ir a eh la consola y vamos a ver que obviamente esto quedó desactualizado si
+01:14:33.480 vamos a recargar esto de nuevo y ahora tenemos engine server dev y tenemos que es una t3 medium sí Esto está
+01:14:41.080 inicializando así que todavía la IP no va a servir no la prueben porque no va a funcionar
+01:14:47.239 pero si vemos justamente hablando de la IP qué está faltando acá volvamos a
+01:14:56.159 nuestro nuestro código no notan algo raro Qué pasó acá yo Por qué no sé la IP
+01:15:04.159 Bueno qué está pasando pasa que por defecto los módulos
+01:15:09.760 de terraform se guardan los outputs recuerdan que habíamos configurado unos
+01:15:15.239 outputs nosotros Bueno al guardarlos en módulos se los guardan ellos si
+01:15:20.760 directamente es como que el módulo dice este es mío si lo querés
+01:15:51.800 asignatarios sí voy a venir y le voy a pegar acá pregunta rápida Esto va a
+01:16:01.560 funcionar Bueno si dijeron que sí está mal no va a funcionar si dijeron que no
+01:16:08.400 est lo correcto Por qué no va a funcionar Esto bueno porque ahora el
+01:16:14.520 origen o el valor del output no existe en este contexto de terraform el objeto
+01:16:23.120 aws instance engine server no existe más qué es lo que existe acá existe el
+01:16:29.679 contexto módulo bien Bueno Pensé que lo iba a reemplazar
+01:16:36.960 abajo me olvidé si punto Perdón acá delante algo que me olvidé es módulo si
+01:16:45.120 el recurso bueno encima yo lo pongo en español módulo bien punto el módulo punto y la
+01:16:54.280 propiedad Cuál es la propiedad se llama public IP no en el nombre de la
+01:16:59.520 propiedad el output se llama así server public IP y server public dns okay Bueno
+01:17:06.159 vamos entonces a cambiarle el de abajo este se llama server public IP y este se
+01:17:12.000 llama server public dns y acá Este output en en este
+01:17:17.760 contexto no se llama server public dns O sí se llama así obviamente pero no lo
+01:17:23.120 queremos usar como eso por qué Porque lo queremos direccionar más que server public queremos ponerle por ejemplo eng
+01:17:31.040 ginex dev IP y por ejemplo enginex dev dns bien Ahora sí aplicamos
+01:17:40.560 volvemos acá y simplemente hacemos el terraform apply esto de nuevo se puede
+01:17:46.800 hacer simplemente el output pero yo les quiero mostrar que el apply no debería ejecutar nada distinto porque esto
+01:17:53.639 debería estar funcionando y ahí vemos que aparecieron los outputs sí le vamos a dar que sí y ahora Una vez que se
+01:17:59.960 aplicó este nuevo cambio ya tenemos nuestra salida tenemos el engine x dep
+01:18:05.440 dns y el engine x dep IP ya está es mágico tenemos la ip de nuevo vamos a
+01:18:12.360 probar si el eh si el engine x ya levantó a ver http
+01:18:18.880 dos puntos barra barra la IP y acá lo tenemos Welcome to engine si quieren
+01:18:25.120 pueden abrir un navegador ustedes mismos y lo pueden probar si yo no lo voy a hacer pero sepan que lo pueden sin
+01:18:31.639 ningún problema bien Bueno estamos en un
+01:18:37.280 punto que el código Ya lo tenemos modularizado repasemos un poquito tenemos el código modularizado bien lo
+01:18:44.719 tenemos con distintas variables ya estamos en condiciones de poder crear otra máquina usando el mismo
+01:18:54.280 módulo porque Cuál era la La magia de todo esto y poder crear dos entornos distintos al mismo tiempo no Bueno vamos
+01:19:02.440 a hacer eso y para que vean que esto funciona De verdad vamos a estar creando otra key directamente sí me voy a copiar
+01:19:10.000 acá El Comando y ven que vamos a crear el engine server qa Ke Por qué Porque la
+01:19:15.920 máquina de qa no quiero que sea la misma que la de dev Así que no le vamos a poner ningún path phras Y limpiamos esto
+01:19:22.000 y ya lo tenemos y ahora sí vamos a venir y vamos a crear
+01:19:28.320 un nuevo módulo en este caso el nuevo módulo es exactamente el mismo solamente que en lugar de llamarse gu dev se va a
+01:19:35.400 llamar gu qa la carpeta va a ser exactamente la misma el módulo de arriba bien en este caso Quizás El medium el
+01:19:42.880 small que tenía ya me queda un poco chico vamos a ir a un large a ver si se la banca y el ambiente va a ser qa y
+01:19:50.600 obviamente que el nombre va a ser qa en este caso y vamos a crear también dos
+01:19:56.320 outputs nuevos porque si no no vamos a tener la IP qué vamos a cambiar de acá Bueno en lugar de enginex dev en este
+01:20:03.199 caso se va a llamar obviamente bueno directamente busquemos gu bajo dev Así que cemos las cuatro cosas al mismo
+01:20:09.400 tiempo y va a ser gu bajo qa y acá ya tenemos los outputs de qa y Tenemos los
+01:20:15.199 outputs de dep no fíjense que se llama engine server qa acá se llama con el
+01:20:20.960 mismo nombre así que ya tenemos todos los objetos Bueno vamos a hacer un terraform
+01:20:27.320 apply antes de eso le voy a estar enseñando algo extra Sí por qué porque
+01:20:32.920 me están cayendo bien y les quiero enseñar algo extra Qué pasa si yo como bien vieron
+01:20:40.159 estoy tirando mucho código pero estamos haciendo eh cambios y tocando muchas
+01:20:46.199 veces eh Yes o enter o cosas como para que terraf espere una confirmación
+01:20:52.040 manual Qué pasa si yo no quiero esa confirmación manual bueno Existen dos cosas como para automatizar esto la
+01:20:59.320 primera es el plan si yo ejecuto terraform plan Ah bueno recuerden Esto
+01:21:05.639 me pasa hasta a mí que como creamos un nuevo módulo hay que volver a correr el init si esto lo voy a limpiar no importa
+01:21:12.440 bueno escribí mal Clear Ahí está vamos a otra vez de nuevo terraform plan Qué
+01:21:18.239 pasa si yo quiero crear este plan pero quiero que se haga todo automatizado onda lo pongo en un pipeline a esto si
+01:21:25.360 como saben el código se puede poner en un pipeline Así que se puede automatizar totalmente Y esto no lo quiero hacer yo
+01:21:31.639 no lo quiero hacer a mano quiero que directamente lo haga una máquina pero pero también me lo quiero guardar o sea
+01:21:39.560 no quiero que simplemente se ejecuten todos los cambios sin saber qué está pasando me gustaría a mí guardarme este
+01:21:45.120 plan Bueno lo que se puede hacer es lo siguiente en nuestro pipeline podemos
+01:21:50.440 poner terraf plan menos out Sí y el archivo por ejemplo en este caso va a
+01:21:56.280 ser eh server no sé qa punto se usa la
+01:22:01.840 extensión tf plan bien pero no es necesaria no me acuerdo ahora si es el out lleva el igual o un espacio creo que
+01:22:10.040 va así a ver espérenme si esto no explota es porque está era así y no era
+01:22:15.440 con el igual y lo que va a estar pasando Okay esperemos es que va a terminar
+01:22:21.440 guardando y acá está justamente un archivo Sí en el archivo este está
+01:22:27.520 simplemente guardando la salida entonces fíjense que tenemos tanto en nuestro pipeline corriendo El Comando ya podemos
+01:22:34.800 ver todo lo que va a pasar y simplemente si ponemos terraform apply de este
+01:22:39.960 nombre vamos a copiarlo y vamos a ejecutarlo de nuevo ahí está vamos a ver
+01:22:46.280 que está pasando si no pide directamente validación Ya estamos hechos te puede
+01:22:53.000 llegar a pedir y sí obviamente te puede llegar a pedir Eh hay algo que explotó vamos a ver qué
+01:22:59.520 pasa eh corre Ah ya sé lo que pasó eh lo que pasó es que el tipo de instancia no
+01:23:05.800 me está dejando Por qué Porque es muy grande y yo tengo esta cuenta limitada Así que vamos a ir a small y dejemos
+01:23:13.280 small y listo no hay ningún problema vamos a ejecutar de nuevo el plan para que lo pise eh yo tenía un poquito como
+01:23:19.760 de miedo a ver si se la bancaba no quería ver hasta dónde iba llegué al
+01:23:24.800 límite Así que lo vamos a dejar ahí y ahora de nuevo vamos a ejecutar el plan bien
+01:23:30.360 e perdón eh ahí el apply Ahora sí esperemos lo y esto se va a ejecutar a
+01:23:36.679 ver si lo ejecuta solo o me pide la autorización si me pide la autorización le le voy a mostrar un comando que
+01:23:44.440 aprueba automáticamente No necesitamos
+01:23:51.480 interacción listo aplicó aplicó El Comando y ya
+01:23:57.280 tenemos creado ahora mismo nuestros dos máquinas virtuales con nuestras dos ips
+01:24:04.480 por supuesto separadas usando el mismo código esto es mágico está bien vamos a
+01:24:14.000 ir a a la consola WS por si no me creen vamos a estar refrescando esto y vemos
+01:24:20.719 que ahora aparece tanto server qa como server dep perfecto era lo que queríamos
+01:24:25.880 Si vemos el server de qa y vamos a los tags por ejemplo vemos que el environment es qua y el nombre
+01:24:32.239 Obviamente que es qua Y si vamos a la de dev vemos que el ambiente es dev y el nombre también es dev Qué pasa si ahora
+01:24:40.280 vos venís vas a tu máquina te descargas este
+01:24:45.360 código yo te comparto las credenciales de acceso a la cuenta a la que estoy usando yo ahora y vos querés ver qué
+01:24:52.040 pasa con el plan lo que va a pasar es que todo tu código para terraform nunca
+01:24:59.159 existió o sea toda esta infraestructura que acabamos de crear para terrafor nunca existió te va a decir Hay que
+01:25:05.239 crear cuatro máquinas nuevas y cuando las quieras crear va a explotar todo porque va a decir ya existen cuatro
+01:25:11.400 máquinas o dos máquinas Mejor dicho que se llaman así Qué pasa acá Bueno lo que
+01:25:18.199 pasa y me diste el pie a la eh ya casi
+01:25:23.360 casi finalizando me faltan dos cositas pero lo que pasa es que hay conflictos
+01:25:29.080 con qué con el tf State Qué es el tf State
+01:25:36.560 Qué es el archivo de estado de terraform bueno el archivo de estado de terraform
+01:25:42.480 es un archivo que registra el estado actual de la infraestructura administrada Por
+01:25:48.760 terraform qué quiere decir esto que absolutamente todo lo que vos creá o
+01:25:56.040 eliminas o modificas con terraform queda guardado en un archivo en qué archivo en
+01:26:02.719 este archivo de estado como te podrás dar una idea
+01:26:09.560 claramente no es una buena práctica no está para nada bueno que ese archivo se
+01:26:16.239 almacen en tu máquina local por qué y bueno Porque primero como veníamos
+01:26:21.679 hablando con José no se puede hacer colaborativo Porque si yo creo una
+01:26:27.880 máquina virtual tengo que compartirte el archivo vos creas una máquina me tenés que compartir a mí el archivo y
+01:26:33.119 claramente eso no escala como este archivo tiene información muy sensible
+01:26:39.440 no está bueno tampoco pushear a github sí a nuestro repositorio git donde están
+01:26:45.719 toda nuestra infraestructura tampoco está bueno subirlo ahí Cuál es la mejor práctica Bueno subirla a un Bucket en
+01:26:52.800 este caso el buet que vamos a estar utilizando es el de S3 Por qué Porque estamos trabajando todo el webinar con
+01:26:59.480 aws no me voy a ir a aure Pero obviamente que lo pueden subir a este
+01:27:05.080 archivo a un storage account en aure por supuesto Sí en mi caso vamos a estar
+01:27:10.440 utilizando un S3 cómo hacemos Esto bueno simplemente como vemos acá a la
+01:27:15.840 izquierda hay que agarrar Y definir una estructura que vamos a hacer uso de la palabra terraform llaves y vamos a
+01:27:23.440 configurar este terraform en este caso le vamos a poner un backend que se va a llamar S3 porque es literalmente estamos
+01:27:31.119 tomando un S3 y acá le ponemos las tres propiedades el Bucket la aquí y la
+01:27:37.159 región muy pero muy importante backet el nombre del S3 la aquí en Qué ruta dentro
+01:27:44.560 del backet vamos a estar guardando este archivo y la región del S3 por supuesto Bueno ahora vamos a pasar ar
+01:27:53.560 a hacer este ejemplo vamos a aplicar lo que acabamos de ver en nuestro código
+01:27:59.560 que ya lo tenemos vamos a venir al código vamos a limpiar un poquito la consola y vamos a eh abrir
+01:28:08.480 esto Ahora cuál es ese archivo Bueno si yo vengo acá a la izquierda primero
+01:28:14.560 vamos a ver que acá está terraform tfstate y fíjense que acá es un archivo
+01:28:20.960 gigantesco donde está absolutamente todo la infraestructura que acabamos de
+01:28:26.960 trabajar está absolutamente todo acá si lo analizan lo van a ver absolutamente todo y Recuerden que tenemos creadas dos
+01:28:34.920 máquinas virtuales de dos entornos distintos con módulos O sea que ya tenemos algo Bastante avanzado que no
+01:28:41.320 queremos perder Así que lo queremos tratar de mantener acá entonces lo que
+01:28:47.280 vamos a estar haciendo obviamente como dijimos antes es crear la estructura esta que vimos recién en el código Pero
+01:28:53.520 qué pasa nos está faltando el S3 no lo tenemos Bueno vamos a crearlo rápidamente y volvemos vamos al S3 los
+01:29:03.199 S3 por si no lo conocen son los buckets en Amazon para justamente guardar
+01:29:08.480 información La idea es que esta sea un contenido estático y en nuestro caso funciona s Vamos a ponerle webinar
+01:29:15.360 terraform eh caos binario y vamos a ponerle Ah ya le puse terraf listo y por
+01:29:23.719 las dudas en caso de que exista un archivo un buet que se llama así no va a pasar pero por las dudas le vamos a
+01:29:29.760 poner un ID no algo así como para identificarlo eh lo voy me voy a copiar
+01:29:36.199 este nombre Porque lo vamos a estar utilizando acl deshabilitamos público eh bloqueamos
+01:29:42.440 el acceso público es un buet privado el versionado en el wet se puede habilitar o no es indistinto como buena práctica
+01:29:49.719 está bueno que esté habilitado en este caso lo vamos a a dejar deshabilitado la aquí la vamos a encriptar por la llave
+01:29:55.800 que administra Amazon y listo crear backet esperamos un ratito y ya quedó
+01:30:01.600 creado el Bucket ahora simplemente mientras que esto se termina de crear vamos a volver
+01:30:07.960 al código de de visual Studio code y vamos a agregarle el modito que Llama a este
+01:30:16.239 backet lo tenemos acá fíjense backet S3 backet el nombre del buet que ya lo
+01:30:23.119 teníamos desde antes bien la aquí webinar terraform bar terraform tf State
+01:30:28.840 y región la que estamos usando antes Bueno vamos a venir y vamos a correr
+01:30:34.560 como ya sabemos el terraform init Por qué Porque este init si recuerdan se
+01:30:40.000 comunica tanto con los proveedores como Configura tu backend que eso obviamente
+01:30:45.880 no lo había dicho antes porque no los quería marear pero ya están bastante maduros como para entender qué es lo que
+01:30:51.840 que hay que hacer y fíjense que terraform es lo bastante inteligente como para darse cuenta Che Mira yo acá
+01:30:58.840 estoy dándome cuenta que ya existe un archivo de estado en tu máquina local lo queres migrar al backend al S3 obvio que
+01:31:06.840 lo quiero migrar lo quiero guardar quiero que esto pueda ser compartido por
+01:31:11.960 todo mi equipo de eobs Listo Ya está ya lo tené subido Ah listo sí Mira si pones
+01:31:18.440 un terraform plan Ahora vas a ver que no va a pasar nada sea porque ya está todo creado Okay y te creo yo sí créeme de
+01:31:28.040 verdad eh Bueno vamos a ver esperemos si hay algún cambio no no hay ningún cambio
+01:31:34.199 okay Y si vamos a S3 qué está pasando acá dentro a ver me creo una carpeta que
+01:31:40.199 llama webinar terraform y adentro me creo el archivo que se llama terraform tfstate listo buenísimo ya tenemos
+01:31:48.560 nuestro archivo de estado subido a S3 Esto es algo crucial que necesitamos
+01:31:55.480 hacer para poder trabajar en equipo Sí y para no depender de nuestra máquina local porque obviamente mientras que
+01:32:01.600 esté todo en nuestra máquina local y claramente tenemos problemas de seguridad y bueno de otras cosas más que
+01:32:07.960 no hace falta meternos bien Así que ya tenemos nuestro archivo de estado subido
+01:32:13.159 a eh a S3 bien ya viemos el archivo de estado
+01:32:20.480 Qué es lo que nos falta no falta algo que para mí
+01:32:26.400 el 80% de las personas no sabe que se puede hacer con terraform yo creo ojo es
+01:32:33.040 una una estadística que me inventé yo si Miami me lo confirmó
+01:32:39.000 No text
+01:32:39.080 básicamente podemos importar recursos desde terraf Qué significa esto si vos
+01:32:46.719 tenés una infraestructura ya creada en aws en aure en Google y querés empezar a
+01:32:54.119 administrarla con terraform porque quizás empezaste a trabajar ahora con terraform Y te gustó bueno literalmente
+01:33:02.679 terraform te permite importar tus recursos que ya creaste a mano desde la
+01:33:08.800 consola pero empezar a administrarlo en terraform o sea Esto está buenísimo
+01:33:14.760 realmente es una práctica muy copada que para mí muy poca gente sabe Así que si
+01:33:21.080 lo sabes usar personalmente creo que eh es una de las pocas personas que lo sabe Pero bueno esto ya es una creencia
+01:33:27.400 personal qué hay que hacer Bueno Simplemente hay que venir y ejecutar un comando que es terraform import Qué
+01:33:35.480 sigue después del terraform import el tipo de instancia o de recurso que
+01:33:40.520 querés importar en este caso vamos a estar importando una instancia de s2 el
+01:33:45.960 nombre que lo vamos a estar identificando dentro de terraform en este caso lo vamos a llamar server web y
+01:33:53.880 el ID de la instancia con eso ya automáticamente vamos a tener importado
+01:34:00.920 ese recurso en terraform después si yo quiero editarlo y modificarlo o verlo Bueno hay que
+01:34:08.159 hacer lo de abajo el segundo Comando terraform State show para que me lo
+01:34:14.000 muestre al Estado pero le indico de Qué recurso de awc instance server web y ya
+01:34:21.520 vamos a ver qué pasa lo primero que vamos a estar haciendo para mostrarles esto es ir a WS y crear una instancia a
+01:34:29.560 mano Sí vamos a venir acá esto no importa no hace falta que lo sepan pero yo le voy a estar poniendo el nombre que
+01:34:35.520 definimos recién que se llama server web vamos a venir acá abajo y voy a venir y
+01:34:41.080 le voy a poner un T2 medium bien una llave en este caso bueno a ver
+01:34:50.480 usemos bueno no usemos ninguna llave en este caso no me está interesando ponerle llave Security Group y bueno el 22 pero
+01:34:58.159 en realidad Quizás El htp también desde dónde y de todo el mundo s está bien
+01:35:03.239 listo acá es todo lo que hice hace un rato desde terraform pero estoy haciendo manual básicamente ejecutamos la
+01:35:10.119 instancia y dale ejecutemos la bien Esperemos a ver si esto se la banca listo me creó la instancia perfecto
+01:35:17.280 imaginemos que este servidor es un servidor que yo lo tengo hace años porque mi infraestructura
+01:35:24.639 empezó corriendo en máquinas s2 y porque yo no sabía que existía terraform y ahora aprendí terraform y lo quiero
+01:35:31.800 empezar a importar cómo hacemos Esto bueno justamente con lo que vimos hace un ratito lo único que nos interesa es
+01:35:38.600 el ID de la instancia Así que vamos a ir al repositorio vamos a venir para acá y
+01:35:44.639 vamos a ejecutar el terraform import si lo que vamos a estar haciendo es poniendo como ya vios antes vamos a
+01:35:53.280 estar ejecutando terraform import el nombre del recurso y el nombre interno
+01:36:00.080 Obviamente que le queremos poner server web espacio y el ID el ID yo lo voy a
+01:36:05.320 buscar de nuevo porque lo perdí cuando copié este Comando y acá está es este ID del recurso que yo quiero empezar a
+01:36:11.320 importar a terraform bueno Vamos a darle enter y vamos a ver qué pasa Oh falló
+01:36:18.560 Qué pasó bueno Esto es algo muy común no gusten pasa cuando vos querés importar
+01:36:24.480 un recurso terraform te pide que siempre tengas una definición del recurso limpia
+01:36:31.440 vacía o sea vamos a venir acá lo vamos a poner ahí y vamos a ponerle import bien
+01:36:37.360 y Simplemente te está pidiendo esto Che me escribís esto como para tenerlo ahí de referencia en el estado bueno Dale
+01:36:43.360 pues vamos a ejecutar El Comando listo Yo esto Obviamente que dejé que fala a
+01:36:48.440 propósito Porque si se fijan el error es bastante simple y ya te dice terraform lo que hay que escribir así que no se
+01:36:54.520 asusten por ese lado listo quedó el estado importado a terraform Ya está ya tenemos nuestra máquina que la creamos
+01:37:01.639 hace un montón que la tenemos trabajando y que la amamos tanto en terraform qué
+01:37:06.719 podemos hacer con esto Bueno la verdad que muchas cosas pero entre ellas lo que vamos a hacer es Ver el estado ver lo
+01:37:13.600 que tiene la máquina Así que vamos a venir acá y vamos a ejecutar terraform State show como vimos antes para ver el
+01:37:20.320 estado de la máquina si se fijan lo que va a pasar es que nos va a mostrar todas las propiedades que
+01:37:26.280 terraform tiene de esta máquina absolutamente todas y qué podemos hacer
+01:37:31.360 Bueno podemos venir voy a seleccionar eh esta opción y voy a poner copiar salida
+01:37:37.400 Esto es algo puntual que tiene visual Studio code no sé si es un plugin o algo
+01:37:42.599 yo lo tengo nativo estuve probando con otros texto digamos con otras terminales
+01:37:48.080 pero bueno sepan que está acá lo podemos copiar y y lo que voy a hacer es reemplazar todo este bloque de código
+01:37:54.239 Vacío con el archivo de estado que acabamos de obtener bien lo copié lo
+01:38:00.800 pegué y Listo Ya lo tenemos acá ahora este lo borramos porque era el comando no me interesa ahora ya lo tengo
+01:38:07.639 importado Qué pasa hay un tema ahora es que hay variables o más mejor dicho que
+01:38:14.440 variables son propiedades que no pueden ser modificadas y que no deberían estar
+01:38:20.119 eh digamos guardadas en un archivo Qué significa Esto bueno que si yo pongo
+01:38:25.719 terraform plan va a fallar Por qué Porque está diciendo Mirá no puedo
+01:38:31.119 definir estas cosas no las puedo tener en mi eh en mi archivo de propiedades Sí
+01:38:37.239 entonces lo que se puede hacer es simplemente venir una por una y eliminarlas en mi caso para hacer algo
+01:38:42.880 mucho más fácil y volver a las propiedades que nosotros queríamos solamente me voy a quedar con las propiedades que nosotros veníamos usando
+01:38:49.800 Sí porque acá ven un montón de propiedades y no quiero que tampoco se asusten Entonces qué veníamos usando
+01:38:56.080 bueno la Ami El tipo de instancia después veníamos usando eh los tags
+01:39:03.119 también veníamos usando y veníamos usando la propiedad bpc Security ID y
+01:39:08.760 creo que ninguna más no todo esto ya se puede borrar listo fíjense que ya está
+01:39:14.400 eran estas Qué va a pasar ahora que solamente queremos guardar estos valores
+01:39:20.119 para qué y bueno para gestión para poder modificarlos si ejecutamos de nuevo el plan vamos a ver si explota si falla
+01:39:27.520 algo lo que va a pasar Es que las propiedades Uy Perdón las propiedades
+01:39:32.639 que yo no tengo definidas dentro del archivo de estado las va a guardar terraform porque ya las tiene guardadas
+01:39:37.960 sí Ahora qué pasa fíjense que yo de repente Ya tengo los tags y Qué pasa si
+01:39:43.560 yo ahora quiero agregarle esos tags que ya definimos en anteriores recursos bueno los puedo hacer completamente sí
+01:39:50.599 vamos vamos a venir acá me los voy a copiar porque los tengo anotados como saben y voy a reemplazar estos tags por
+01:39:59.159 justamente los que ya teníamos antes sí en este caso el servidor se llamaba
+01:40:04.360 server web es decir No quiero que cambie y vamos a de nuevo ejecutar un plan a
+01:40:09.440 ver qué pasa a ver si ya por lo menos podemos cambiar algo desde terraform de un
+01:40:17.960 recurso que no existía en terraform y que no fue creado desde terraf fíjense
+01:40:23.639 que ojo me está diciendo Bueno mir vamos a estar agregá todos estos ts a tu infraestructura lo queres hacer y obvio
+01:40:32.679 voy a decir que s Vení y perdón que no quer limpiar la consola para que lo vean
+01:40:37.960 y ven vamos autar un Terra y nada y corlo bueno yé pasa si yo
+01:40:46.119 estoy cansado de ponerle Yes bueno directamente voy ñar Cancelar para que
+01:40:52.040 no no se asusten bien directamente podemos hacer uso del flag menos menos
+01:40:57.199 auto approve Y eso directamente se reduce a no ponerle Yes y directamente
+01:41:03.520 que lo aplique atención a usar el auto approve en un pipeline o en algo productivo
+01:41:11.880 Porque pueden llegar a explotar cosas más serias en este caso estamos usando
+01:41:17.280 eh digamos un ambiente de prueba que es una consola que no pasa nada pero tengan cuidado Listo ya tenemos
+01:41:25.599 nuestro nuestros txs modificados Así que simplemente ahora si venimos y
+01:41:30.960 recargamos en esta instancia y vamos a tags Ya está listo aparecieron todos
+01:41:36.400 tags que creamos y administramos desde terraform Perdón que no no estoy
+01:41:42.320 mostrando Ahí está podemos venir la máquina recargamos la refresque a esto
+01:41:48.280 para que se actualice y vine y ticamente aparecieron todos los tags que creamos
+01:41:53.639 desde terraform fíjense todo el poder que tiene terraform y todo lo que se
+01:41:59.159 puede hacer con terraform Es una herramienta
+01:42:04.000 No text
+01:42:04.480 fascinante vamos con eh para finalizar las buenas prácticas de terraform
+01:42:10.440 simplemente para que las vean antes de eso Bien voy a venir acá de nuevo y voy a comite este cambio porque no lo
+01:42:17.560 hicimos antes import server ahí está Sí y eso ya quedó guardado en el archivo de
+01:42:23.239 estado y ya quedó subido al backet de S3 así que
+01:42:49.760 préstenme recomendamos o recomiendo empezar con un archivo único para simplificar la gestión de ese archivo
+01:42:57.400 pero una vez que ya ves que está funcionando y que está empezando a tener un poco de color Bueno separemos lo en
+01:43:02.920 distintos archivos justamente que cumplan sus funcionalidades la segunda buena práctica versiona tu código justamente
+01:43:10.920 Nosotros todo el webinar estuvimos comitando cada cambio importante que
+01:43:17.159 eh hacíamos con la infraestructura sí usar variables también otra herramienta
+01:43:24.159 que nosotros veníamos usando recuerden la la facilidad y la practicidad que te
+01:43:29.239 da a usar variables y ni hablar de los módulos realmente implementar módulos es
+01:43:35.800 algo que e es otro mundo totalmente y te facilita un montón la vida para poder
+01:43:43.360 crear muchas instancias Sí con la misma el mismo paquetito digamos que nosotros
+01:43:49.360 estuvimos trabajando bien Recuerden que los módulos pueden ser públicos o privados y los públicos son exactamente
+01:43:56.280 iguales que los privados lo único que cambia es el source en lugar de ponerle un directorio de una carpeta le pones
+01:44:02.599 una URL o le ponés simplemente una ruta que aws ya detecta como módulo Así que
+01:44:08.280 no es nada más ni nada menos que eso preguntas llegamos al final Muchas
+01:44:11.000 No text
+01:44:15.119 gracias por haberse quedado hasta acá Espero que hayan aprendido que les haya gustado que hayan eh no sé activado las
+01:44:22.719 ganas de aprender un poco más de terrafor o implementarlo tienen mi mail por si quieren mandarme alguna pregunta
+01:44:30.719 algún tema puntual podemos ver temas que no sean solamente de terraform Sí ya
+01:44:36.040 saben que eh manejo mucho tema WS pero también manejo asure Aunque todavía no
+01:44:41.440 estoy certificado todavía ya va a venir pero manejo mucho asur también si quieren hablar temas de devops puntuales
+01:44:48.040 de shenkin de lo que quieran está el mail ahí y abajo eh las redes del Canal
+01:44:53.080 venimos creciendo hoy justamente cumplimos eh la meta de llegar a 5000
+01:44:59.400 suscriptores bien así que qué mejor forma de celebrar lo que haciendo este webinar esta clase de eh de terraform
+01:45:07.480 Espero que lo hayan disfrutado que les haya gustado Esto va a quedarse acá igual lo van a poder ver y lo van a
+01:45:13.560 poder eh repetir las veces que [Música]
+01:45:19.480 quieran
+01:45:29.190 [Música]
+01:45:40.000 k

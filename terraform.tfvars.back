@@ -1,0 +1,22 @@
+ami_id = "ami-080c353f4798a202f" # Amazon Linux 2 AMI ID for us-east-1
+instance_type = "t3.micro"
+server_name = "nginx_server"
+environment = "development"
+#security_group_id = "sg-0bb1c1EXAMPLE" # Example Security Group ID
+#key_pair_name = "nginx-terraform-key" # Example Key Pair Name
+# Note: The security group and key pair are now created within the Terraform configuration.
+# This file contains variable definitions for the Terraform configuration.
+# Variables defined here are referenced in the main Terraform files to configure resources.
+# This approach allows for easier management and modification of configuration values.
+# By separating variable definitions into this file, we can keep our main configuration files cleaner
+# and more focused on resource definitions and logic.
+# Additionally, using a .tfvars file allows for different configurations to be easily swapped out
+# by simply changing the .tfvars file used durante las ejecuciones de Terraform.
+# Esto es particularmente útil para gestionar diferentes entornos (por ejemplo, desarrollo, staging, producción)
+# sin modificar el código central de Terraform.
+# Al definir variables en este archivo, podemos cambiar valores como el tipo de instancia,
+# el nombre del servidor, o el entorno sin necesidad de tocar los archivos principales de Terraform.
+# Esto mejora la mantenibilidad y flexibilidad de nuestra infraestructura como código.
+# En resumen, este archivo sirve como un punto centralizado para definir y gestionar
+# las variables que configuran nuestra infraestructura en AWS a través de Terraform.
+
