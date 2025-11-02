@@ -9,13 +9,14 @@ keys/*
 *.tfstate
 *.tfstate.*
 
+# .tfvars (incluye backups y variantes)
+*.tfvars
+*.tfvars.json
+*.tfvars.*
+
 # Crash log files
 crash.log
 crash.*.log
-
-# Variables locales (pueden contener secretos)
-*.tfvars
-*.tfvars.json
 
 # Archivos de override locales
 override.tf
@@ -23,3 +24,21 @@ override.tf.json
 *.override.tf
 *.override.tf.json
 
+# Planes locales
+*.plan
+*.tfplan
+
+# Config local del CLI de Terraform
+.terraformrc
+terraform.rc
+
+# Materiales sensibles (global)
+*.key
+*.pem
+*.pfx
+*.crt
+*.cer
+
+# Basura del OS
+.DS_Store
+Thumbs.db
