@@ -37,10 +37,7 @@ resource "aws_instance" "nginx_server" {
   ami           = data.aws_ami.amazon_linux_2.id
   instance_type = "t3.micro"
 
-  tags = {
-    Name = "NginxServer"
-  }
-
+ 
   # 'user_data' es un script que se ejecuta automáticamente la primera vez que la instancia arranca.
   # Es ideal para instalar software o realizar configuraciones iniciales.
   user_data = <<EOF
@@ -51,6 +48,14 @@ resource "aws_instance" "nginx_server" {
                 EOF
   key_name = aws_key_pair.nginx_server_ssh_key.key_name
   vpc_security_group_ids = [aws_security_group.nginx_sg.id]
+
+  tags = {
+    Name = "NginxServer"
+    Environment = "Development"
+    owner = "Jose Escalante"
+    Team = "DevOps"
+    project = "Terraform Practice"
+  } 
   
 }
 
@@ -58,6 +63,14 @@ resource "aws_instance" "nginx_server" {
 resource "aws_key_pair" "nginx_server_ssh_key" {
   key_name   = "nginxserver.key"
   public_key = file("./keys/nginx-server.key.pub")
+    tags = {
+    Name = "NginxServer-SSH-Key"
+    Environment = "Development"
+    owner = "Jose Escalante"
+    Team = "DevOps"
+    project = "Terraform Practice"
+  } 
+  
   
 }
 
@@ -86,5 +99,37 @@ resource "aws_security_group" "nginx_sg" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+
+  tags = {
+    Name = "NginxServer-SG"
+    Environment = "Development"
+    owner = "Jose Escalante"
+    Team = "DevOps"
+    project = "Terraform Practice"
+  }
 }
 
+#### output #####
+# Este bloque define una salida que Terraform mostrará después de aplicar la configuración.
+# En este caso, muestra la dirección IP pública de la instancia EC2 creada.
+output "nginx_server_public_ip" {
+  description = "Direccion ip publica de la instancia EC2"
+  value = aws_instance.nginx_server.public_ip
+} 
+output "nginx_server_private_ip" {
+  description = "Direccion ip privada de la instancia EC2"
+  value = aws_instance.nginx_server.private_ip
+}
+output "nginx_server_public_dns" {
+  description = "Direccion DNS publica de la instancia EC2"
+  value = aws_instance.nginx_server.public_dns
+}
+output "nginx_server_private_dns" {
+  description = "Direccion DNS privada de la instancia EC2"
+  value = aws_instance.nginx_server.private_dns
+}
+## comando conexion ssh##
+output "ssh_connection_command" {
+  description = "Comando para conectar via SSH a la instancia EC2"
+  value = "ssh -i ./keys/nginx-server.key ec2-user@${aws_instance.nginx_server.public_ip}"
+}
