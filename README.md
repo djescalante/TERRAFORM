@@ -1,20 +1,37 @@
-# Terraform: EC2 con Nginx (AWS)
+# 🚀 Terraform: EC2 con Nginx (AWS)
+
+![Terraform](https://img.shields.io/badge/Terraform-1.x-844FBA?logo=terraform&logoColor=white)
+![AWS](https://img.shields.io/badge/AWS-EC2-FF9900?logo=amazon-aws&logoColor=white)
+![Region](https://img.shields.io/badge/region-us--east--1-blue)
+![IaC](https://img.shields.io/badge/IaC-Declarativo-success)
 
 Proyecto Terraform para aprovisionar una instancia EC2 (Amazon Linux 2) con Nginx instalado y listo para servir HTTP. Incluye un módulo reutilizable (`nginx_server_module`) con Security Group y Key Pair.
 
-## Requisitos
+---
+
+## 📚 Tabla de Contenidos
+- Descripción rápida
+- Requisitos
+- Estructura
+- Uso (módulo recomendado)
+- Uso (archivo simple)
+- Notas de seguridad
+- Problemas comunes
+- Referencias
+
+## ✅ Requisitos
 - Cuenta AWS con credenciales configuradas (`aws configure`).
 - Terraform >= 1.3.
 - Clave pública SSH en `keys/` para registrar el Key Pair en AWS.
 
-## Estructura
+## 🗂️ Estructura
 - `main.tf`: ejemplo simple de instancia EC2 con `user_data` que instala Nginx.
 - `nginx_server_module/`: módulo que crea EC2 + Security Group + Key Pair.
 - `docs/`: material de apoyo del curso y notas.
 - `.terraform.lock.hcl`: debe versionarse.
 - `.gitignore`: ignora `.terraform/`, `*.tfstate`, `*.key`, planes, etc.
 
-## Uso (módulo recomendado)
+## 🧩 Uso (módulo recomendado)
 1) Genera tu par de claves SSH (si no tienes uno):
 ```
 ssh-keygen -t rsa -b 4096 -C "dev" -f keys/nginx_server.key
@@ -40,19 +57,19 @@ terraform plan
 terraform apply
 ```
 
-4) Salidas útiles (outputs):
+4) 📤 Salidas útiles (outputs):
 - `nginx_server_public_ip`
 - `nginx_server_public_dns`
 - `ssh_connection_command`
 
 Abre `http://<nginx_server_public_ip>` para probar Nginx.
 
-5) Destruir recursos cuando termines:
+5) 🧹 Destruir recursos cuando termines:
 ```
 terraform destroy
 ```
 
-## Uso (archivo simple `main.tf`)
+## 📄 Uso (archivo simple `main.tf`)
 El `main.tf` de la raíz incluye un ejemplo directo que:
 - Usa Amazon Linux 2 en `us-east-1`.
 - Instala Nginx vía `amazon-linux-extras`.
@@ -60,19 +77,18 @@ El `main.tf` de la raíz incluye un ejemplo directo que:
 
 Si prefieres este enfoque, asegúrate de tener un Security Group que permita `22/tcp` y `80/tcp` asociado a la instancia.
 
-## Notas de seguridad
+## 🔐 Notas de seguridad
 - No subas archivos sensibles: `*.key`, `*.tfvars` con secretos, estados `*.tfstate`. Ya están en `.gitignore`.
 - El estado de Terraform puede contener datos sensibles; usa backend remoto con cifrado si es posible (S3 + DynamoDB).
 - El archivo `.terraform.lock.hcl` se debe versionar.
 - Si se subió una clave privada o binarios grandes al historial, rota la clave y reescribe el historial (ya se limpió `.terraform/` en este repo).
 
-## Problemas comunes
+## 🧭 Problemas comunes
 - Security Group duplicado: si aparece `InvalidGroup.Duplicate`, importa el SG existente o usa `name_prefix`/un sufijo único.
 - Nginx no se instala: revisa logs de cloud-init en la instancia `cat /var/log/cloud-init-output.log` y que la AMI sea Amazon Linux 2.
 - Acceso SSH fallido: confirma que el Key Pair registrado coincida con tu `*.key` local y que el SG abra el puerto 22.
 
-## Referencias
+## 🔗 Referencias
 - Curso original usado como base: https://www.youtube.com/watch?v=_84CxYRv9Ik
 - Terraform docs: https://developer.hashicorp.com/terraform/docs
 - AWS Provider: https://registry.terraform.io/providers/hashicorp/aws/latest
-
