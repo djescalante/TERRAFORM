@@ -49,6 +49,7 @@ resource "aws_instance" "nginx_server" {
                 amazon-linux-extras install -y nginx1
                 systemctl enable --now nginx
                 EOF
+  key_name = aws_key_pair.nginx_server_ssh_key.key_name
   }
 
 resource "aws_key_pair" "nginx_server_ssh_key" {
