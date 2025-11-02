@@ -57,3 +57,5 @@ resource "aws_key_pair" "nginx_server_ssh_key" {
   public_key = file("./keys/nginx_server.pub")
   
 }
+
+
