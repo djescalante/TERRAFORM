@@ -1,7 +1,8 @@
 # Local .terraform directories
 .terraform/
 
-#keys ssh
+# SSH keys (privadas y públicas) - no versionar
+./keys/*.key
 ./keys/*.pem
 ./keys/*.ppk
 ./keys/*.pub
@@ -28,4 +29,3 @@ override.tf
 override.tf.json
 *.override.tf
 *.override.tf.json
-
