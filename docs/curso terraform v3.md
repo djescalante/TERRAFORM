@@ -1,5 +1,11 @@
 # 🚀 Curso Completo de Terraform - De Cero a Experto
 
+---
+
+## Curso original de referencia
+
+- Curso original (YouTube): https://www.youtube.com/watch?v=_84CxYRv9Ik
+
 ![Terraform Logo](https://www.terraform.io/assets/images/logo-hashicorp-3f10732f.svg)
 
 ---
