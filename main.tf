@@ -50,12 +50,41 @@ resource "aws_instance" "nginx_server" {
                 systemctl enable --now nginx
                 EOF
   key_name = aws_key_pair.nginx_server_ssh_key.key_name
-  }
-
-resource "aws_key_pair" "nginx_server_ssh_key" {
-  key_name   = "nginx_server.key"
-  public_key = file("./keys/nginx_server.pub")
+  vpc_security_group_ids = [aws_security_group.nginx_sg.id]
   
 }
 
+# Este bloque define un recurso que Terraform debe crear y gestionar: un par de claves SSH.
+resource "aws_key_pair" "nginx_server_ssh_key" {
+  key_name   = "nginxserver.key"
+  public_key = file("./keys/nginx-server.key.pub")
+  
+}
+
+#Seguridad para la instancia EC2
+resource "aws_security_group" "nginx_sg" {
+  name        = "nginx_sg"
+  description = "Allow HTTP and SSH traffic"
+
+  ingress  {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
 
